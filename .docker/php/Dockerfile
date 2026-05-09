@@ -22,6 +22,10 @@ RUN docker-php-source extract && \
     docker-php-ext-install pdo_mysql zip && \
     docker-php-source delete
 
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    pkg-config
+
 # Install Intl
 RUN docker-php-source extract && \
     docker-php-ext-configure intl && \
