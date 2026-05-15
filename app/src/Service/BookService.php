@@ -10,6 +10,7 @@ use App\Dto\BookListInputFiltersDto;
 use App\Entity\Book;
 use App\Entity\Category;
 use App\Repository\BookRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -126,6 +127,8 @@ class BookService implements BookServiceInterface
      * @param BookListInputFiltersDto $filters Raw filters from request
      *
      * @return BookListFiltersDto Result filters
+     *
+     * @throws NonUniqueResultException
      */
     private function prepareFilters(BookListInputFiltersDto $filters): BookListFiltersDto
     {

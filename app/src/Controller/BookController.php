@@ -216,20 +216,4 @@ class BookController extends AbstractController
             ]
         );
     }// end delete()
-
-    /*
-     * Rent action
-     */
-
-    //    #[Route(
-    //        '/{id}/rent',
-    //        name: 'book_rent',
-    //        requirements: ['id' => '[1-9]\d*'],
-    //        methods: 'GET|PUT'
-    //    )]
-    //    public function rent(Request $request, Book $book): Response
-    //    {
-    //
-    //
-    //    }
 }// end class

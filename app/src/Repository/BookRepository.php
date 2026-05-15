@@ -75,7 +75,7 @@ class BookRepository extends ServiceEntityRepository
     }
 
     /**
-     * Query all tasks for category.
+     * Query all books for category.
      *
      * @param Category $category Category
      *
@@ -118,11 +118,11 @@ class BookRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count tasks by category.
+     * Count books by category.
      *
      * @param Category $category Category
      *
-     * @return int Number of tasks in category
+     * @return int Number of books in category
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
