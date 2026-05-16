@@ -107,7 +107,24 @@ class CategoryControllerTest extends WebTestCase
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+    /**
+     * Test user create category (FORBIDDEN).
+     */
+    public function testCreateCategoryForbiddenForUser(): void
+    {
+        $user = $this->createUser([
+            UserRole::ROLE_USER->value,
+        ]);
 
+        $this->httpClient->loginUser($user);
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+    }
     /**
      * Test admin create category.
      */
@@ -134,6 +151,26 @@ class CategoryControllerTest extends WebTestCase
             302,
             $this->httpClient->getResponse()->getStatusCode()
         );
+    }
+    /**
+     * Test user edit category (FORBIDDEN).
+     */
+    public function testEditCategoryForbiddenForUser(): void
+    {
+        $user = $this->createUser([
+            UserRole::ROLE_USER->value,
+        ]);
+
+        $this->httpClient->loginUser($user);
+
+        $category = $this->createCategory();
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId().'/edit'
+        );
+
+        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -164,6 +201,26 @@ class CategoryControllerTest extends WebTestCase
             302,
             $this->httpClient->getResponse()->getStatusCode()
         );
+    }
+    /**
+     * Test user delete category (FORBIDDEN).
+     */
+    public function testDeleteTagForbiddenForUser(): void
+    {
+        $user = $this->createUser([
+            UserRole::ROLE_USER->value,
+        ]);
+
+        $this->httpClient->loginUser($user);
+
+        $category = $this->createCategory();
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId().'/delete'
+        );
+
+        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
