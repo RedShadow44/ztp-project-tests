@@ -70,24 +70,6 @@ class CategoryController extends AbstractController
         return $this->render('category/show.html.twig', ['category' => $category, 'pagination' => $pagination]);
     }// end show()
 
-    /**
-     * Show books for category action.
-     *
-     * @return Response HTTP response
-     */
-
-    // #[Route(
-    // '/{id}/all',
-    // name: 'category_all_books',
-    // requirements: ['id' => '[1-9]\d*'],
-    // methods: 'GET'
-    // )]
-    // public function showAllBooksForCategory(Category $category): Response
-    // {
-    // $books = $this->bookService->findBooksForCategory($category);
-    //
-    // return $this->render('category/showAllBooksForCategory.html.twig', ['books'=>$books]);
-    // }
 
     /**
      * Create action.

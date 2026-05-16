@@ -38,7 +38,8 @@ class CategoryRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
-            ->select('partial category.{id, createdAt, updatedAt, title}')
+//            ->select('partial category.{id, createdAt, updatedAt, title}')
+            ->select('category')
             ->orderBy('category.updatedAt', 'DESC');
     }
 

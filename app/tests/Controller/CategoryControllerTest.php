@@ -1,0 +1,300 @@
+<?php
+
+namespace App\Tests\Controller;
+
+use App\Entity\Book;
+use App\Entity\Category;
+use App\Entity\Enum\UserRole;
+use App\Entity\User;
+use App\Repository\CategoryRepository;
+use App\Repository\UserRepository;
+use App\Service\CategoryService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Doctrine\ORM\NoResultException;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\BookRepository;
+
+
+class CategoryControllerTest extends WebTestCase
+{
+    public const TEST_ROUTE = '/category';
+
+    private KernelBrowser $httpClient;
+
+    private ?EntityManagerInterface $entityManager;
+
+    public function setUp(): void
+    {
+        $this->httpClient = static::createClient();
+
+        $this->entityManager = static::getContainer()
+            ->get('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * Anonymous user should be redirected.
+     */
+    public function testIndexAnonymous(): void
+    {
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Normal user should get 403.
+     */
+    public function testIndexUserForbidden(): void
+    {
+        $user = $this->createUser([
+            UserRole::ROLE_USER->value,
+        ]);
+
+        $this->httpClient->loginUser($user);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+
+        $this->assertEquals(
+            403,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Admin should access category index.
+     */
+    public function testIndexAdmin(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+
+        $this->assertEquals(
+            200,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Test admin show category.
+     */
+    public function testShowCategoryAdmin(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $category = $this->createCategory();
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId()
+        );
+
+        $this->assertEquals(
+            200,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Test admin create category.
+     */
+    public function testCreateCategoryAdmin(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $crawler = $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        $form = $crawler->filter('#submit-button')->form([
+            'category[title]' => 'Created '.uniqid(),
+        ]);
+
+        $this->httpClient->submit($form);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Test admin edit category.
+     */
+    public function testEditCategoryAdmin(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $category = $this->createCategory();
+
+        $crawler = $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId().'/edit'
+        );
+
+        $form = $crawler->filter('#submit-button')->form([
+            'category[title]' => 'Updated '.uniqid(),
+        ]);
+
+        $this->httpClient->submit($form);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Test admin delete category.
+     */
+    public function testDeleteCategoryAdmin(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $category = $this->createCategory();
+
+        $crawler = $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId().'/delete'
+        );
+
+        $form = $crawler->filter('#submit-button')->form();
+
+        $this->httpClient->submit($form);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    /**
+     * Test delete category with books.
+     */
+    public function testDeleteCategoryWithBooks(): void
+    {
+        $admin = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
+        $this->httpClient->loginUser($admin);
+
+        $category = $this->createCategory();
+
+        $book = new Book();
+        $book->setTitle('Book '.uniqid());
+        $book->setAuthor('Author');
+        $book->setDescription('Description');
+        $book->setCategory($category);
+
+        $this->entityManager->persist($book);
+        $this->entityManager->flush();
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$category->getId().'/delete'
+        );
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testCanBeDeletedException(): void
+    {
+        $categoryRepository = $this->createMock(CategoryRepository::class);
+
+        $bookRepository = $this->createMock(BookRepository::class);
+
+        $bookRepository
+            ->method('countByCategory')
+            ->willThrowException(
+                new NoResultException()
+            );
+
+        $paginator = $this->createMock(PaginatorInterface::class);
+
+        $service = new CategoryService(
+            $categoryRepository,
+            $bookRepository,
+            $paginator
+        );
+
+        $category = new Category();
+
+        $result = $service->canBeDeleted($category);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Create category helper.
+     */
+    private function createCategory(): Category
+    {
+        $category = new Category();
+        $category->setTitle('Category '.uniqid());
+
+        $categoryRepository = static::getContainer()
+            ->get(CategoryRepository::class);
+
+        $categoryRepository->save($category);
+
+        return $category;
+    }
+
+    /**
+     * Create user helper.
+     */
+    private function createUser(array $roles): User
+    {
+        $passwordHasher = static::getContainer()
+            ->get('security.password_hasher');
+
+        $user = new User();
+        $user->setEmail(uniqid().'@example.com');
+        $user->setRoles($roles);
+        $user->setBlocked(false);
+
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                'password'
+            )
+        );
+
+        $userRepository = static::getContainer()
+            ->get(UserRepository::class);
+
+        $userRepository->save($user);
+
+        return $user;
+    }
+}

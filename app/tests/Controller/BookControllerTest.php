@@ -87,21 +87,7 @@ class BookControllerTest extends WebTestCase
         $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
     }
 
-//    public function testShowBookAdmin(): void
-//    {
-//        $user = $this->createUser([
-//            UserRole::ROLE_USER->value,
-//            UserRole::ROLE_ADMIN->value
-//        ]);
-//        $this->httpClient->loginUser($user);
-//
-//        $book = $this->createBook();
-//
-//        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId());
-//
-//        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
-//        $this->assertSelectorExists('html');
-//    }
+
 
     /*
      * CREATE (ADMIN ONLY)
@@ -130,21 +116,32 @@ class BookControllerTest extends WebTestCase
 
     public function testCreateBookSubmit(): void
     {
-        $user = $this->createUser([UserRole::ROLE_ADMIN->value]);
+        $user = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
         $this->httpClient->loginUser($user);
 
         $category = $this->createCategory();
 
-        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
+        $crawler = $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
 
-        $this->httpClient->submitForm('submit', [
+        $form = $crawler->filter('#submit-button')->form([
             'book[title]' => 'Test Book',
             'book[author]' => 'Author',
             'book[description]' => 'Description',
             'book[category]' => $category->getId(),
         ]);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->httpClient->submit($form);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /*
@@ -165,22 +162,40 @@ class BookControllerTest extends WebTestCase
 
     public function testEditBookAdmin(): void
     {
-        $user = $this->createUser([UserRole::ROLE_ADMIN->value]);
+        $user = $this->createUser([
+            UserRole::ROLE_ADMIN->value,
+        ]);
+
         $this->httpClient->loginUser($user);
 
         $book = $this->createBook();
         $category = $this->createCategory();
 
-        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId().'/edit');
+        $crawler = $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$book->getId().'/edit'
+        );
 
-        $this->httpClient->submitForm('submit', [
-            'book[title]' => 'Updated Title',
-            'book[author]' => 'Updated Author',
-            'book[description]' => 'Updated Description',
-            'book[category]' => $category->getId(),
-        ]);
+//        $form = $crawler->filter('#submit-button')->form([
+//            'book[title]' => 'Updated Title',
+//            'book[author]' => 'Updated Author',
+//            'book[description]' => 'Updated Description',
+//            'book[category]' => $category->getId(),
+//        ]);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('submit')->form();
+
+        $form['book[title]'] = 'Updated Title';
+        $form['book[author]'] = 'Updated Author';
+        $form['book[description]'] = 'Updated Description';
+        $form['book[category]'] = $category->getId();
+
+        $this->httpClient->submit($form);
+
+        $this->assertEquals(
+            302,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /*
@@ -213,7 +228,9 @@ class BookControllerTest extends WebTestCase
         $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
     }
 
-
+    /**
+     * Create user helper.
+     */
     private function createUser(array $roles): User
     {
         $container = static::getContainer();
@@ -231,6 +248,9 @@ class BookControllerTest extends WebTestCase
         return $user;
     }
 
+    /**
+     * Create category helper.
+     */
     private function createCategory(): Category
     {
         $container = static::getContainer();
@@ -245,6 +265,9 @@ class BookControllerTest extends WebTestCase
         return $category;
     }
 
+    /**
+     * Create book helper.
+     */
     private function createBook(): Book
     {
         $container = static::getContainer();
