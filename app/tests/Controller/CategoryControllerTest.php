@@ -82,6 +82,7 @@ class CategoryControllerTest extends WebTestCase
             200,
             $this->httpClient->getResponse()->getStatusCode()
         );
+        $this->assertSelectorExists('html');
     }
 
     /**
@@ -106,6 +107,7 @@ class CategoryControllerTest extends WebTestCase
             200,
             $this->httpClient->getResponse()->getStatusCode()
         );
+        $this->assertSelectorExists('html');
     }
     /**
      * Test user create category (FORBIDDEN).

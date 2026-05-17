@@ -269,6 +269,7 @@ class UserController extends AbstractController
     )]
     public function change(Request $request, User $user): Response
     {
+        $this->denyAccessUnlessGranted('view_profile', $user);
         $form = $this->createForm(
             UserType::class,
             $user,
@@ -323,6 +324,8 @@ class UserController extends AbstractController
     )]
     public function changePass(Request $request, User $user): Response
     {
+        $this->denyAccessUnlessGranted('view_profile', $user);
+
         $form = $this->createForm(
             PasswdType::class,
             $user,
@@ -379,15 +382,6 @@ class UserController extends AbstractController
     )]
     public function setAdmin(Request $request, User $user): Response
     {
-        //        $user->setRoles([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value]);
-        //        $this->userService->save($user);
-        //
-        //        $this->addFlash(
-        //            'success',
-        //            $this->translator->trans('message.created_successfully')
-        //        );
-        //
-        //        return $this->redirectToRoute('user_index');
         $form = $this->createForm(
             FormType::class,
             $user,
@@ -443,17 +437,6 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('user_index');
         }
-        //        $roles = $user->getRoles();
-        //        $updatedRoles = array_diff($roles, [UserRole::ROLE_ADMIN->value]);
-        //        $user->setRoles($updatedRoles);
-        //        $this->userService->save($user);
-        //
-        //        $this->addFlash(
-        //            'success',
-        //            $this->translator->trans('message.role_revoked_successfully')
-        //        );
-        //
-        //        return $this->redirectToRoute('user_index');
         $form = $this->createForm(
             FormType::class,
             $user,

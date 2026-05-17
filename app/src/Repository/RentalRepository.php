@@ -35,11 +35,12 @@ class RentalRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
-            ->select(
-                'partial rental.{id, owner, book, status, rentalDate}',
-                'partial user.{id, email}',
-                'partial book.{id, title}'
-            )
+//            ->select(
+//                'partial rental.{id, owner, book, status, rentalDate}',
+//                'partial user.{id, email}',
+//                'partial book.{id, title}'
+//            )
+            ->select('rental', 'user', 'book')
             ->join('rental.book', 'book')
             ->join('rental.owner', 'user');
     }
@@ -108,28 +109,4 @@ class RentalRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('rental');
     }
-    //    /**
-    //     * @return Rental[] Returns an array of Rental objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Rental
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

@@ -47,15 +47,15 @@ class TagControllerTest extends WebTestCase
 
     public function testIndexAdmin(): void
     {
-        $admin = $this->createUser([
-            UserRole::ROLE_ADMIN->value,
-        ]);
+        $admin = $this->createUser([UserRole::ROLE_ADMIN->value,]);
 
         $this->httpClient->loginUser($admin);
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
         $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+
+        $this->assertSelectorExists('html');
     }
 
     /*
@@ -78,6 +78,8 @@ class TagControllerTest extends WebTestCase
         );
 
         $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+
+        $this->assertSelectorExists('html');
     }
 
     /*
