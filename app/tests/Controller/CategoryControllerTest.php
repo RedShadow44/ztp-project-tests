@@ -338,7 +338,7 @@ class CategoryControllerTest extends WebTestCase
             ->get('security.password_hasher');
 
         $user = new User();
-        $user->setEmail(uniqid().'@example.com');
+        $user->setEmail('user'.uniqid().'@example.com');
         $user->setRoles($roles);
         $user->setBlocked(false);
 

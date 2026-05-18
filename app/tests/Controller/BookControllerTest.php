@@ -239,7 +239,7 @@ class BookControllerTest extends WebTestCase
         $userRepository = $container->get(UserRepository::class);
 
         $user = new User();
-        $user->setEmail('user'.rand(1, 999999).'@example.com');
+        $user->setEmail('user'.uniqid().'@example.com');
         $user->setRoles($roles);
         $user->setPassword($passwordHasher->hashPassword($user, 'password'));
 

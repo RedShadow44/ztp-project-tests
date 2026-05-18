@@ -31,38 +31,61 @@ class UserRepositoryTest extends KernelTestCase
         $this->userRepository = $container->get(UserRepository::class);
     }
 
-
-
     /**
-     * Test query all.
+     * Test upgrade password.
      */
-    public function testQueryAll(): void
+    public function testUpgradePassword(): void
     {
+        // given
+        $user = new User();
+
+        $user->setEmail(
+            'upgrade' . uniqid() . '@example.com'
+        );
+
+        $user->setPassword('old_password');
+
+        $user->setRoles([
+            UserRole::ROLE_USER->value,
+        ]);
+
+        $this->userRepository->save($user);
+
         // when
-        $queryBuilder = $this->userRepository->queryAll();
+        $this->userRepository->upgradePassword(
+            $user,
+            'new_password'
+        );
 
         // then
-        $this->assertNotNull($queryBuilder);
+        $updatedUser = $this->userRepository->find(
+            $user->getId()
+        );
+
+        $this->assertEquals(
+            'new_password',
+            $updatedUser->getPassword()
+        );
     }
 
     /**
-     * Test find by role.
+     * Test upgrade password exception.
      */
-    public function testFindByRole(): void
+    public function testUpgradePasswordException(): void
     {
         // given
-        $admin = new User();
-        $admin->setEmail('admin'.uniqid().'@example.com');
-        $admin->setPassword('password');
-        $admin->setRoles([UserRole::ROLE_ADMIN->value]);
+        $this->expectException(
+            \Symfony\Component\Security\Core\Exception\UnsupportedUserException::class
+        );
 
-        $this->userRepository->save($admin);
+        $unsupportedUser = $this->createMock(
+            \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface::class
+        );
 
         // when
-        $result = $this->userRepository
-            ->findByRole(UserRole::ROLE_ADMIN->value);
-
-        // then
-        $this->assertNotEmpty($result);
+        $this->userRepository->upgradePassword(
+            $unsupportedUser,
+            'password'
+        );
     }
 }
