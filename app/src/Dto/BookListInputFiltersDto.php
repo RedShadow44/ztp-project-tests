@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Book list input filters DTO.
  */

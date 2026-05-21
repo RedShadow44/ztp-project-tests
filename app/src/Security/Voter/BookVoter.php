@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Book voter.
  */
@@ -8,6 +9,7 @@ namespace App\Security\Voter;
 use App\Entity\User;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -19,7 +21,7 @@ class BookVoter extends Voter
     /**
      * View permission.
      *
-     * @const string
+     * @var string
      */
     private const VIEW = 'VIEW';
     private const RENT = 'RENT';
@@ -45,10 +47,11 @@ class BookVoter extends Voter
      * @param string         $attribute Permission name
      * @param mixed          $subject   Object
      * @param TokenInterface $token     Security token
+     * @param Vote|null      $vote      Vote
      *
      * @return bool Vote result
      */
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {

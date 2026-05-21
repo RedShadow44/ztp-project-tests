@@ -37,7 +37,7 @@ class RentalControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -56,7 +56,7 @@ class RentalControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -74,7 +74,7 @@ class RentalControllerTest extends WebTestCase
         $this->httpClient->request('GET', '/rent_index');
 
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -88,7 +88,7 @@ class RentalControllerTest extends WebTestCase
         $this->httpClient->request('GET', '/rent_index');
 
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -113,7 +113,7 @@ class RentalControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -136,7 +136,7 @@ class RentalControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -159,10 +159,11 @@ class RentalControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     public function testDenyAdmin(): void
     {
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
@@ -181,7 +182,7 @@ class RentalControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -208,7 +209,7 @@ class RentalControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }

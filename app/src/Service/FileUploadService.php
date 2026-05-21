@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File upload service.
  */
@@ -44,8 +45,11 @@ class FileUploadService implements FileUploadServiceInterface
 
         try {
             $file->move($this->getTargetDirectory(), $fileName);
-        } catch (FileException) {
-            // ... handle exception if something happens during file upload
+            //        } catch (FileException) {
+            //            // ... handle exception if something happens during file upload
+            //        }
+        } catch (FileException $e) {
+            throw new FileException($e->getMessage());
         }
 
         return $fileName;

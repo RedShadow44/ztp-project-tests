@@ -48,7 +48,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
         $this->assertSelectorExists('html');
@@ -71,10 +71,11 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test show user.
      */
@@ -89,17 +90,18 @@ class UserControllerTest extends WebTestCase
         // when
         $this->httpClient->request(
             'GET',
-            '/user/' . $targetUser->getId()
+            '/user/'.$targetUser->getId()
         );
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
         $this->assertSelectorExists('html');
     }
+
     /**
      * Test show user forbidden for non-admin user.
      */
@@ -114,12 +116,12 @@ class UserControllerTest extends WebTestCase
         // when
         $this->httpClient->request(
             'GET',
-            '/user/' . $user2->getId()
+            '/user/'.$user2->getId()
         );
 
         // then
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -138,17 +140,18 @@ class UserControllerTest extends WebTestCase
         // when
         $crawler = $this->httpClient->request(
             'GET',
-            '/user/' . $targetUser->getId() . '/edit'
+            '/user/'.$targetUser->getId().'/edit'
         );
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
         $this->assertSelectorExists('form');
     }
+
     /**
      * Test edit user submit.
      */
@@ -162,11 +165,11 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->httpClient->request(
             'GET',
-            '/user/' . $targetUser->getId() . '/edit'
+            '/user/'.$targetUser->getId().'/edit'
         );
 
         $form = $crawler->filter('form')->form([
-            'user[email]' => 'updated_' . uniqid() . '@example.com',
+            'user[email]' => 'updated_'.uniqid().'@example.com',
         ]);
 
         // when
@@ -174,10 +177,11 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test show own profile.
      */
@@ -198,7 +202,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
         $this->assertSelectorExists('html');
@@ -228,7 +232,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -246,7 +250,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -260,10 +264,11 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test change profile forbidden for another user.
      */
@@ -283,7 +288,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -306,7 +311,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -337,7 +342,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -361,7 +366,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -384,7 +389,7 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -416,10 +421,11 @@ class UserControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test set admin success.
      */
@@ -442,7 +448,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -470,8 +476,9 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
+
     /**
      * Test revoke admin blocked when last admin.
      */
@@ -489,8 +496,9 @@ class UserControllerTest extends WebTestCase
         );
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
+
     /**
      * Test block user.
      */
@@ -513,8 +521,9 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
+
     /**
      * Test unblock user.
      */
@@ -538,7 +547,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -566,7 +575,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**

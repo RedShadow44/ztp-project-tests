@@ -1,20 +1,16 @@
 <?php
+
 /**
  * Security controller.
  */
 
 namespace App\Controller;
 
-use App\Entity\Enum\UserRole;
 use App\Entity\User;
-use App\Form\Type\PasswdType;
-use App\Form\Type\UserType;
 use App\Service\RentalServiceInterface;
 use App\Service\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;

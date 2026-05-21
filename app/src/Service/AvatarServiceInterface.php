@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Avatar service interface.
  */

@@ -40,7 +40,7 @@ class UserRepositoryTest extends KernelTestCase
         $user = new User();
 
         $user->setEmail(
-            'upgrade' . uniqid() . '@example.com'
+            'upgrade'.uniqid().'@example.com'
         );
 
         $user->setPassword('old_password');

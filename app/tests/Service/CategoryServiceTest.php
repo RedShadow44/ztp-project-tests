@@ -53,6 +53,7 @@ class CategoryServiceTest extends KernelTestCase
 
     /**
      * Test delete().
+     *
      * @throws NonUniqueResultException
      */
     public function testDelete(): void
@@ -84,6 +85,7 @@ class CategoryServiceTest extends KernelTestCase
 
     /**
      * Test findOneById().
+     *
      * @throws NonUniqueResultException
      */
     public function testFindOneById(): void

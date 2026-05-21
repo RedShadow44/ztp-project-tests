@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User controller.
  */
@@ -148,7 +149,7 @@ class UserController extends AbstractController
                 $this->translator->trans('message.changed_successfully')
             );
 
-            $id = $request->get('id');
+            $id = $request->attributes->get('id');
 
             return $this->redirectToRoute(
                 'user_index',
@@ -204,7 +205,7 @@ class UserController extends AbstractController
                 $this->translator->trans('message.changed_successfully')
             );
 
-            $id = $request->get('id');
+            $id = $request->attributes->get('id');
 
             return $this->redirectToRoute(
                 'user_index',
@@ -289,7 +290,7 @@ class UserController extends AbstractController
                 $this->translator->trans('message.changed_successfully')
             );
 
-            $id = $request->get('id');
+            $id = $request->attributes->get('id');
 
             return $this->redirectToRoute(
                 'user_profile',
@@ -347,7 +348,7 @@ class UserController extends AbstractController
                 $this->translator->trans('message.changed_successfully')
             );
 
-            $id = $request->get('id');
+            $id = $request->attributes->get('id');
 
             return $this->redirectToRoute(
                 'user_profile',
@@ -376,8 +377,8 @@ class UserController extends AbstractController
      */
     #[Route(
         '/user/{id}/set_admin',
-        requirements: ['id' => '[1-9]\d*'],
         name: 'set_admin',
+        requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT'
     )]
     public function setAdmin(Request $request, User $user): Response
@@ -423,8 +424,8 @@ class UserController extends AbstractController
      */
     #[Route(
         '/user/{id}/revoke_admin',
-        requirements: ['id' => '[1-9]\d*'],
         name: 'revoke_admin',
+        requirements: ['id' => '[1-9]\d*'],
         methods: ['GET', 'PUT']
     )]
     public function revokeAdmin(Request $request, User $user): Response

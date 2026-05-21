@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Category controller.
  */
@@ -69,7 +70,6 @@ class CategoryController extends AbstractController
 
         return $this->render('category/show.html.twig', ['category' => $category, 'pagination' => $pagination]);
     }// end show()
-
 
     /**
      * Create action.

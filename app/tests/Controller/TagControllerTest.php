@@ -29,7 +29,7 @@ class TagControllerTest extends WebTestCase
     {
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testIndexUserForbidden(): void
@@ -42,18 +42,18 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testIndexAdmin(): void
     {
-        $admin = $this->createUser([UserRole::ROLE_ADMIN->value,]);
+        $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
 
         $this->httpClient->loginUser($admin);
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
 
         $this->assertSelectorExists('html');
     }
@@ -77,7 +77,7 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId()
         );
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
 
         $this->assertSelectorExists('html');
     }
@@ -99,7 +99,7 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/create'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testCreateTagAdmin(): void
@@ -121,7 +121,7 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /*
@@ -143,7 +143,7 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId().'/edit'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testEditTagAdmin(): void
@@ -167,7 +167,7 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /*
@@ -189,7 +189,7 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId().'/delete'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testDeleteTagAdmin(): void
@@ -211,7 +211,7 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /*

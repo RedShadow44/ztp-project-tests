@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Search type.
  */
@@ -52,10 +53,10 @@ class SearchType extends AbstractType
                     'class'       => 'form-control',
                 ],
                 'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[A-Za-z0-9\s]*$/',
-                        'message' => $this->translator->trans('message.invalid_characters'),
-                    ]),
+                    new Regex(
+                        pattern: '/^[A-Za-z0-9\s]*$/',
+                        message: $this->translator->trans('message.invalid_characters'),
+                    ),
                 ],
             ])
             ->add('authorSearch', TextType::class, [
@@ -66,10 +67,10 @@ class SearchType extends AbstractType
                     'class'       => 'form-control',
                 ],
                 'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[A-Za-z0-9\s]*$/',
-                        'message' => $this->translator->trans('message.invalid_characters'),
-                    ]),
+                    new Regex(
+                        pattern: '/^[A-Za-z0-9\s]*$/',
+                        message: $this->translator->trans('message.invalid_characters'),
+                    ),
                 ],
             ]);
     }

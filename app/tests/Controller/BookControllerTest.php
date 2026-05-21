@@ -31,7 +31,7 @@ class BookControllerTest extends WebTestCase
     {
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testIndexRouteUser(): void
@@ -41,7 +41,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
         $this->assertSelectorExists('html');
     }
 
@@ -55,7 +55,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId());
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testShowBookAllowedUser(): void
@@ -69,7 +69,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId());
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
         $this->assertSelectorExists('html');
     }
 
@@ -84,7 +84,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId());
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
 
@@ -100,7 +100,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testCreateBookAdmin(): void
@@ -110,7 +110,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
 
-        $this->assertEquals(200, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
         $this->assertSelectorExists('form');
     }
 
@@ -139,7 +139,7 @@ class BookControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -157,7 +157,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId().'/edit');
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testEditBookAdmin(): void
@@ -176,12 +176,12 @@ class BookControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$book->getId().'/edit'
         );
 
-//        $form = $crawler->filter('#submit-button')->form([
-//            'book[title]' => 'Updated Title',
-//            'book[author]' => 'Updated Author',
-//            'book[description]' => 'Updated Description',
-//            'book[category]' => $category->getId(),
-//        ]);
+        //        $form = $crawler->filter('#submit-button')->form([
+        //            'book[title]' => 'Updated Title',
+        //            'book[author]' => 'Updated Author',
+        //            'book[description]' => 'Updated Description',
+        //            'book[category]' => $category->getId(),
+        //        ]);
 
         $form = $crawler->selectButton('submit')->form();
 
@@ -193,7 +193,7 @@ class BookControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -211,7 +211,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$book->getId().'/delete');
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     public function testDeleteBookAdmin(): void
@@ -225,7 +225,7 @@ class BookControllerTest extends WebTestCase
 
         $this->httpClient->submitForm('submit');
 
-        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -257,8 +257,8 @@ class BookControllerTest extends WebTestCase
         $repo = $container->get(CategoryRepository::class);
 
         $category = new Category();
-//        $category->setTitle('Test Category');
-        $category->setTitle('Test Category ' . uniqid());
+        //        $category->setTitle('Test Category');
+        $category->setTitle('Test Category '.uniqid());
 
         $repo->save($category);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User entity.
  */
@@ -175,6 +176,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    #[\Deprecated(
+        message: 'Symfony requires eraseCredentials(), but it should be empty or replaced by __serialize() if needed.'
+    )]
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here

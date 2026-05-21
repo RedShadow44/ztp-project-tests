@@ -161,7 +161,7 @@ class BookServiceTest extends KernelTestCase
 
         while ($counter < $expectedResultSize) {
             $book = new Book();
-            $book->setTitle('Book #' . $counter);
+            $book->setTitle('Book #'.$counter);
             $book->setAuthor('Author');
             $book->setDescription('Description');
             $book->setCategory($category);
@@ -198,8 +198,8 @@ class BookServiceTest extends KernelTestCase
 
         while ($counter < $expectedResultSize) {
             $book = new Book();
-            $book->setTitle('Test Book #' . $counter);
-            $book->setAuthor('Author #' . $counter);
+            $book->setTitle('Test Book #'.$counter);
+            $book->setAuthor('Author #'.$counter);
             $book->setDescription('Description');
             $book->setCategory($category);
             $book->setAvailable(true);

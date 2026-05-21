@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Rental controller.
  */
@@ -58,7 +59,7 @@ class RentalController extends AbstractController
             $this->translator->trans('message.rented_successfully')
         );
 
-        $id = $request->get('id');
+        $id = $request->attributes->get('id');
 
         return $this->redirectToRoute(
             'book_show',

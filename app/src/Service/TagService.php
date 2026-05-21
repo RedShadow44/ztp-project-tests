@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tag service.
  */
@@ -22,7 +23,7 @@ class TagService implements TagServiceInterface
      * of specifying them in app/config/config.yml.
      * See https://symfony.com/doc/current/best_practices.html#configuration
      *
-     * @constant int
+     * @varant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
 

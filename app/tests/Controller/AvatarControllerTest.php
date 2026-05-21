@@ -14,7 +14,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AvatarControllerTest.
@@ -72,7 +71,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -108,7 +107,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -140,7 +139,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -165,7 +164,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -183,7 +182,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -201,7 +200,7 @@ class AvatarControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }

@@ -16,7 +16,6 @@ use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\BookRepository;
 
-
 class CategoryControllerTest extends WebTestCase
 {
     public const TEST_ROUTE = '/category';
@@ -41,7 +40,7 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -60,7 +59,7 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
         $this->assertEquals(
-            403,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -79,7 +78,7 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
         $this->assertSelectorExists('html');
@@ -104,11 +103,12 @@ class CategoryControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
         $this->assertSelectorExists('html');
     }
+
     /**
      * Test user create category (FORBIDDEN).
      */
@@ -125,8 +125,9 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/create'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
+
     /**
      * Test admin create category.
      */
@@ -150,10 +151,11 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test user edit category (FORBIDDEN).
      */
@@ -172,7 +174,7 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$category->getId().'/edit'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -200,10 +202,11 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
+
     /**
      * Test user delete category (FORBIDDEN).
      */
@@ -222,7 +225,7 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$category->getId().'/delete'
         );
 
-        $this->assertEquals(403, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
     }
 
     /**
@@ -248,7 +251,7 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -281,7 +284,7 @@ class CategoryControllerTest extends WebTestCase
         );
 
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }

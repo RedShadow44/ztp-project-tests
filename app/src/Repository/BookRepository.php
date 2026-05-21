@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Book repository.
  */
@@ -38,7 +39,7 @@ class BookRepository extends ServiceEntityRepository
      * of specifying them in configuration files.
      * See https://symfony.com/doc/current/best_practices.html#configuration
      *
-     * @constant int
+     * @varant int
      */
     public const PAGINATOR_ITEMS_PER_PAGE = 10;
 

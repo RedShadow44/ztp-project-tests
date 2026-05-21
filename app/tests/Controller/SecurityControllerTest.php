@@ -30,7 +30,7 @@ class SecurityControllerTest extends WebTestCase
 
         // then
         $this->assertEquals(
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -52,9 +52,9 @@ class SecurityControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        //then
+        // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
 
@@ -80,12 +80,12 @@ class SecurityControllerTest extends WebTestCase
         $this->httpClient->submit($form);
 
         // then [usually redirect after login]
-//        $this->assertTrue(
-//            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 200])
-//        );
-        //then
+        //        $this->assertTrue(
+        //            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 200])
+        //        );
+        // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
@@ -99,12 +99,12 @@ class SecurityControllerTest extends WebTestCase
         $this->httpClient->request('GET', '/logout');
 
         // then [Symfony intercepts logout, typically 302 or handled by firewall]
-//        $this->assertTrue(
-//            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 204, 500])
-//        );
-        //then
+        //        $this->assertTrue(
+        //            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 204, 500])
+        //        );
+        // then
         $this->assertEquals(
-            302,
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
         );
     }
