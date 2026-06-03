@@ -94,6 +94,10 @@
             "./vendor/bin/php-cs-fixer fix tests/ --rules=@Symfony,@PSR1,@PSR2,@PSR12",
             "./vendor/bin/rector process src",
             "./vendor/bin/rector process tests"
+        ],
+        "init-app" : [
+            "./bin/console --no-interaction doctrine:migrations:migrate",
+            "./bin/console --no-interaction doctrine:fixtures:load"
         ]
     },
     "conflict": {

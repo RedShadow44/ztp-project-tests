@@ -1,7 +1,7 @@
 <?php
 
 
- /**
+/**
  * Avatar service tests.
  */
 
@@ -10,18 +10,18 @@ namespace App\Tests\Service;
 use App\Entity\Avatar;
 use App\Entity\User;
 use App\Repository\AvatarRepository;
- use App\Service\AvatarService;
- use App\Service\FileUploadServiceInterface;
- use Doctrine\ORM\EntityManagerInterface;
- use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
- use Symfony\Component\Filesystem\Filesystem;
- use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Service\AvatarService;
+use App\Service\FileUploadServiceInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
- /**
+/**
  * Class AvatarServiceTest.
  */
- class AvatarServiceTest extends KernelTestCase
- {
+class AvatarServiceTest extends KernelTestCase
+{
     /**
      * Entity manager.
      */
@@ -50,20 +50,20 @@ use App\Repository\AvatarRepository;
             AvatarRepository::class
         );
 
-        //fake upload service for testing
+        // fake upload service for testing
         $fileUploadService = $this->createMock(
             FileUploadServiceInterface::class
         );
 
-        //if $fileUploadService->upload(...) is called it returns 'avatar.jpg'
+        // if $fileUploadService->upload(...) is called it returns 'avatar.jpg'
         $fileUploadService->method('upload')
             ->willReturn('avatar.jpg');
 
-        //manual creation of AvatarService to inject mocked upload service
+        // manual creation of AvatarService to inject mocked upload service
         $this->avatarService = new AvatarService(
-            sys_get_temp_dir(), //temp folder
-            $this->avatarRepository, //real repo
-            $fileUploadService, //mock fileUploadService
+            sys_get_temp_dir(), // temp folder
+            $this->avatarRepository, // real repo
+            $fileUploadService, // mock fileUploadService
             new Filesystem()
         );
     }
@@ -84,13 +84,13 @@ use App\Repository\AvatarRepository;
 
         $avatar = new Avatar();
 
-        //create real empty temporary file
+        // create real empty temporary file
         $tempFile = tempnam(sys_get_temp_dir(), 'avatar');
 
-        //put content into temp file
+        // put content into temp file
         file_put_contents($tempFile, 'avatar');
 
-        //simulate browser file upload
+        // simulate browser file upload
         $uploadedFile = new UploadedFile(
             $tempFile,
             'avatar.jpg',
@@ -134,19 +134,19 @@ use App\Repository\AvatarRepository;
 
         $avatar = new Avatar();
 
-        //set old avatar to user
+        // set old avatar to user
         $avatar->setFilename('old.jpg');
         $avatar->setUser($user);
 
         $this->avatarRepository->save($avatar);
 
-        //simulate old avatar file (phisical file)
+        // simulate old avatar file (phisical file)
         file_put_contents(
             sys_get_temp_dir().'/old.jpg',
             'old'
         );
 
-        //create new avatar file
+        // create new avatar file
         $tempFile = tempnam(sys_get_temp_dir(), 'avatar');
 
         file_put_contents($tempFile, 'new');
@@ -176,4 +176,4 @@ use App\Repository\AvatarRepository;
             $updatedAvatar->getFilename()
         );
     }
- }
+}
