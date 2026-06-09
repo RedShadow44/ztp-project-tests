@@ -9,6 +9,8 @@ namespace App\Tests\Repository;
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -17,12 +19,14 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class UserRepositoryTest extends KernelTestCase
 {
     /**
-     * User repository.
+     * User repository instance.
      */
     private ?UserRepository $userRepository;
 
     /**
-     * Set up.
+     * Set up test environment.
+     *
+     * Initializes UserRepository from service container.
      */
     public function setUp(): void
     {
@@ -32,7 +36,12 @@ class UserRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test upgrade password.
+     * Test successful password upgrade.
+     *
+     * Ensures password is updated and persisted correctly.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function testUpgradePassword(): void
     {
@@ -69,7 +78,7 @@ class UserRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test upgrade password exception.
+     * Test upgrade password throws exception for unsupported user type.
      */
     public function testUpgradePasswordException(): void
     {

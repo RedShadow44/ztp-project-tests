@@ -24,18 +24,25 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class UserServiceTest extends KernelTestCase
 {
     /**
-     * Entity manager.
+     * Entity manager instance.
+     *
+     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
-     * User service.
+     * User service under test.
+     *
+     * @var UserServiceInterface|null
      */
     private ?UserServiceInterface $userService;
 
     /**
-     * Set up test.
+     * Set up test environment.
      *
+     * Initializes entity manager and service from Symfony container.
+     *
+     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -48,8 +55,11 @@ class UserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test save.
+     * Test saving a user.
      *
+     * Ensures user entity is persisted correctly.
+     *
+     * @return void
      * @throws ORMException
      */
     public function testSave(): void
@@ -78,8 +88,11 @@ class UserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test delete.
+     * Test deleting a user.
      *
+     * Ensures user is removed from persistence layer.
+     *
+     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -112,7 +125,11 @@ class UserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test get paginated list.
+     * Test retrieving paginated user list.
+     *
+     * Ensures pagination returns at least created users.
+     *
+     * @return void
      */
     public function testGetPaginatedList(): void
     {
@@ -144,7 +161,11 @@ class UserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test is last admin.
+     * Test detecting last admin.
+     *
+     * Ensures service correctly identifies single remaining admin.
+     *
+     * @return void
      */
     public function testIsLastAdmin(): void
     {
@@ -164,7 +185,11 @@ class UserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test is not last admin.
+     * Test detecting when user is not last admin.
+     *
+     * Ensures service returns false when multiple admins exist.
+     *
+     * @return void
      */
     public function testIsNotLastAdmin(): void
     {

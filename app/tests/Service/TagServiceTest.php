@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Tag service tests.
+ */
+
 namespace App\Tests\Service;
 
 use App\Entity\Tag;
@@ -7,14 +11,36 @@ use App\Service\TagService;
 use App\Service\TagServiceInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * Class TagServiceTest.
+ */
 class TagServiceTest extends KernelTestCase
 {
+    /**
+     * Entity manager instance.
+     *
+     * @var EntityManagerInterface|null
+     */
     private ?EntityManagerInterface $entityManager;
 
+    /**
+     * Tag service under test.
+     *
+     * @var TagServiceInterface|null
+     */
     private ?TagServiceInterface $tagService;
 
+    /**
+     * Set up test environment.
+     *
+     * Initializes entity manager and service from container.
+     *
+     * @return void
+     */
     public function setUp(): void
     {
         $container = static::getContainer();
@@ -24,6 +50,15 @@ class TagServiceTest extends KernelTestCase
         $this->tagService = $container->get(TagService::class);
     }
 
+    /**
+     * Test saving a tag.
+     *
+     * Ensures tag is persisted in the database.
+     *
+     * @return void
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
     public function testSave(): void
     {
         $tag = new Tag();
@@ -43,6 +78,14 @@ class TagServiceTest extends KernelTestCase
         $this->assertEquals($tag, $result);
     }
 
+    /**
+     * Test deleting a tag.
+     *
+     * Ensures tag is removed from persistence layer.
+     *
+     * @return void
+     * @throws NonUniqueResultException
+     */
     public function testDelete(): void
     {
         $tag = new Tag();
@@ -67,6 +110,13 @@ class TagServiceTest extends KernelTestCase
         $this->assertNull($result);
     }
 
+    /**
+     * Test finding tag by title.
+     *
+     * Ensures service correctly retrieves tag by its title.
+     *
+     * @return void
+     */
     public function testFindOneByTitle(): void
     {
         $tag = new Tag();
@@ -80,6 +130,13 @@ class TagServiceTest extends KernelTestCase
         $this->assertEquals($tag, $result);
     }
 
+    /**
+     * Test finding tag by id.
+     *
+     * Ensures service correctly retrieves tag by its identifier.
+     *
+     * @return void
+     */
     public function testFindOneById(): void
     {
         $tag = new Tag();
@@ -93,6 +150,13 @@ class TagServiceTest extends KernelTestCase
         $this->assertEquals($tag, $result);
     }
 
+    /**
+     * Test paginated tag list retrieval.
+     *
+     * Ensures pagination returns expected number of tags.
+     *
+     * @return void
+     */
     public function testGetPaginatedList(): void
     {
         $counter = 0;

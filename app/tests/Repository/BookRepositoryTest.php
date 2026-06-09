@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Book repository tests.
+ */
+
 namespace App\Tests\Repository;
 
 use App\Dto\BookListFiltersDto;
@@ -8,14 +12,30 @@ use App\Entity\Category;
 use App\Entity\Tag;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * Class BookRepositoryTest.
+ */
 class BookRepositoryTest extends KernelTestCase
 {
+    /**
+     * Doctrine entity manager instance.
+     */
     private ?EntityManagerInterface $entityManager;
 
+    /**
+     * Book repository instance.
+     */
     private ?BookRepository $bookRepository;
 
+    /**
+     * Set up test environment.
+     *
+     * Initializes Doctrine entity manager and Book repository.
+     */
     public function setUp(): void
     {
         $container = static::getContainer();
@@ -27,7 +47,9 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test findBooksForCategory().
+     * Test retrieving books for a given category.
+     *
+     * Ensures only books belonging to the category are returned.
      */
     public function testFindBooksForCategory(): void
     {
@@ -61,7 +83,10 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test countByCategory().
+     * Test counting books by category.
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function testCountByCategory(): void
     {
@@ -96,7 +121,7 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test queryAll without filters.
+     * Test queryAll without any filters.
      */
     public function testQueryAllWithoutFilters(): void
     {
@@ -125,7 +150,7 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test queryAll with title filter.
+     * Test queryAll filtered by title.
      */
     public function testQueryAllWithTitleFilter(): void
     {
@@ -154,7 +179,7 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test queryAll with author filter.
+     * Test queryAll filtered by author.
      */
     public function testQueryAllWithAuthorFilter(): void
     {
@@ -183,7 +208,7 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test queryAll with category filter.
+     * Test queryAll filtered by category.
      */
     public function testQueryAllWithCategoryFilter(): void
     {
@@ -212,7 +237,7 @@ class BookRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Test queryAll with tag filter.
+     * Test queryAll filtered by tag.
      */
     public function testQueryAllWithTagFilter(): void
     {

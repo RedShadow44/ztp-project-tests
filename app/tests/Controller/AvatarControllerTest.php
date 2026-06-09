@@ -21,22 +21,24 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class AvatarControllerTest extends WebTestCase
 {
     /**
-     * HTTP client.
+     * HTTP client used to simulate browser requests.
      */
     private KernelBrowser $httpClient;
 
     /**
-     * Entity manager.
+     * Doctrine entity manager instance.
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
-     * Avatar repository.
+     * Avatar repository instance.
      */
     private ?AvatarRepository $avatarRepository;
 
     /**
-     * Set up.
+     * Set up test environment before each test.
+     *
+     * Initializes HTTP client and retrieves required services from container.
      */
     public function setUp(): void
     {
@@ -55,6 +57,9 @@ class AvatarControllerTest extends WebTestCase
 
     /**
      * Test create avatar page.
+     *
+     * Ensures that authenticated user can access the avatar creation page
+     * and that the form is displayed.
      */
     public function testCreateAvatarPage(): void
     {
@@ -80,6 +85,9 @@ class AvatarControllerTest extends WebTestCase
 
     /**
      * Test redirect to edit when avatar exists.
+     *
+     * Ensures that user is redirected when trying to access create page
+     * while already having an avatar assigned.
      */
     public function testRedirectToEditWhenAvatarExists(): void
     {
@@ -114,6 +122,9 @@ class AvatarControllerTest extends WebTestCase
 
     /**
      * Test edit avatar page.
+     *
+     * Ensures that authenticated user can access avatar edit page
+     * when avatar exists.
      */
     public function testEditAvatarPage(): void
     {
@@ -147,7 +158,10 @@ class AvatarControllerTest extends WebTestCase
     }
 
     /**
-     * Test edit redirect to create when avatar missing.
+     * Test edit redirect when avatar is missing.
+     *
+     * Ensures that user is redirected when trying to edit
+     * a non-existing avatar.
      */
     public function testEditRedirectWhenAvatarMissing(): void
     {
@@ -171,6 +185,9 @@ class AvatarControllerTest extends WebTestCase
 
     /**
      * Test create avatar requires login.
+     *
+     * Ensures unauthenticated users are redirected when accessing
+     * avatar creation page.
      */
     public function testCreateAvatarRequiresLogin(): void
     {
@@ -189,6 +206,9 @@ class AvatarControllerTest extends WebTestCase
 
     /**
      * Test edit avatar requires login.
+     *
+     * Ensures unauthenticated users are redirected when accessing
+     * avatar edit page.
      */
     public function testEditAvatarRequiresLogin(): void
     {
@@ -206,7 +226,10 @@ class AvatarControllerTest extends WebTestCase
     }
 
     /**
-     * Create user helper.
+     * Create a test user entity.
+     *
+     * Helper method that creates, persists, and returns
+     * a user with a hashed password and default role.
      */
     private function createUser(): User
     {

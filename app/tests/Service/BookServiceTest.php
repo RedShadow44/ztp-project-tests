@@ -25,17 +25,21 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class BookServiceTest extends KernelTestCase
 {
     /**
-     * Entity manager.
+     * Entity manager instance.
+     *
+     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
-     * Book service.
+     * Book service under test.
+     *
+     * @var BookServiceInterface|null
      */
     private ?BookServiceInterface $bookService;
 
     /**
-     * Set up test.
+     * Set up test environment.
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -49,9 +53,12 @@ class BookServiceTest extends KernelTestCase
     }
 
     /**
-     * Test save.
+     * Test saving a book entity.
+     *
+     * Ensures the book is persisted and retrievable from database.
      *
      * @throws ORMException
+     * @return void
      */
     public function testSave(): void
     {
@@ -87,10 +94,13 @@ class BookServiceTest extends KernelTestCase
     }
 
     /**
-     * Test delete.
+     * Test deleting a book entity.
+     *
+     * Ensures entity is removed from persistence layer.
      *
      * @throws ORMException
      * @throws OptimisticLockException
+     * @return void
      */
     public function testDelete(): void
     {
@@ -128,7 +138,11 @@ class BookServiceTest extends KernelTestCase
     }
 
     /**
-     * Test set available.
+     * Test setting book availability.
+     *
+     * Ensures availability flag is properly updated.
+     *
+     * @return void
      */
     public function testSetAvailable(): void
     {
@@ -144,7 +158,11 @@ class BookServiceTest extends KernelTestCase
     }
 
     /**
-     * Test get paginated books for category.
+     * Test paginated books for category.
+     *
+     * Ensures pagination returns correct number of results per category.
+     *
+     * @return void
      */
     public function testGetPaginatedBooksForCategory(): void
     {
@@ -181,7 +199,11 @@ class BookServiceTest extends KernelTestCase
     }
 
     /**
-     * Test get paginated list.
+     * Test paginated book list with filters.
+     *
+     * Ensures filtering logic is applied correctly.
+     *
+     * @return void
      */
     public function testGetPaginatedList(): void
     {

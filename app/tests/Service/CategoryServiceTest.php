@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Category service tests.
+ */
+
 namespace Service;
 
 use App\Entity\Book;
@@ -9,14 +13,35 @@ use App\Service\CategoryServiceInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * Class CategoryServiceTest.
+ */
 class CategoryServiceTest extends KernelTestCase
 {
+    /**
+     * Entity manager instance.
+     *
+     * @var EntityManagerInterface|null
+     */
     private ?EntityManagerInterface $entityManager;
 
+    /**
+     * Category service under test.
+     *
+     * @var CategoryServiceInterface|null
+     */
     private ?CategoryServiceInterface $categoryService;
 
+    /**
+     * Set up test environment.
+     *
+     * Initializes service and entity manager from container.
+     *
+     * @return void
+     */
     public function setUp(): void
     {
         $container = static::getContainer();
@@ -27,7 +52,13 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test save().
+     * Test saving a category.
+     *
+     * Ensures category is persisted in database.
+     *
+     * @return void
+     * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function testSave(): void
     {
@@ -52,9 +83,12 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test delete().
+     * Test deleting a category.
+     *
+     * Ensures category is removed from persistence layer.
      *
      * @throws NonUniqueResultException
+     * @return void
      */
     public function testDelete(): void
     {
@@ -84,9 +118,10 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test findOneById().
+     * Test finding category by id.
      *
      * @throws NonUniqueResultException
+     * @return void
      */
     public function testFindOneById(): void
     {
@@ -105,7 +140,11 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test getPaginatedList().
+     * Test paginated category list retrieval.
+     *
+     * Ensures pagination returns at least created entities.
+     *
+     * @return void
      */
     public function testGetPaginatedList(): void
     {
@@ -129,7 +168,9 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test canBeDeleted() when category is empty.
+     * Test canBeDeleted returns true when category has no books.
+     *
+     * @return void
      */
     public function testCanBeDeletedTrue(): void
     {
@@ -148,7 +189,9 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Test canBeDeleted() when category contains books.
+     * Test canBeDeleted returns false when category contains books.
+     *
+     * @return void
      */
     public function testCanBeDeletedFalse(): void
     {

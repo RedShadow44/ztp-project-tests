@@ -1,10 +1,15 @@
 <?php
 
+/**
+ * Rental voter.
+ */
+
 namespace App\Security\Voter;
 
 use App\Entity\Rental;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
@@ -29,7 +34,7 @@ class RentalVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::RETURN && $subject instanceof Rental;
+        return self::RETURN === $attribute && $subject instanceof Rental;
     }
 
     /**
@@ -40,10 +45,11 @@ class RentalVoter extends Voter
      * @param string         $attribute The attribute being checked
      * @param mixed          $subject   The secured subject (Rental entity)
      * @param TokenInterface $token     Authentication token containing the user
+     * @param Vote|null      $vote      Vote
      *
      * @return bool True if access is granted, false otherwise
      */
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         $user = $token->getUser();
 

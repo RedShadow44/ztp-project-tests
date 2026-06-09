@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * File upload service tests.
  */
@@ -19,12 +18,18 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class FileUploadServiceTest extends KernelTestCase
 {
     /**
-     * File upload service.
+     * File upload service instance.
+     *
+     * @var FileUploadService|null
      */
     private ?FileUploadService $fileUploadService;
 
     /**
-     * Set up.
+     * Set up test environment.
+     *
+     * Initializes FileUploadService with real slugger and temp directory.
+     *
+     * @return void
      */
     public function setUp(): void
     {
@@ -37,7 +42,11 @@ class FileUploadServiceTest extends KernelTestCase
     }
 
     /**
-     * Test upload.
+     * Test successful file upload.
+     *
+     * Ensures file is moved to target directory and filename is returned.
+     *
+     * @return void
      */
     public function testUpload(): void
     {
@@ -69,7 +78,9 @@ class FileUploadServiceTest extends KernelTestCase
     }
 
     /**
-     * Test get target directory.
+     * Test retrieving target upload directory.
+     *
+     * @return void
      */
     public function testGetTargetDirectory(): void
     {
@@ -85,7 +96,11 @@ class FileUploadServiceTest extends KernelTestCase
     }
 
     /**
-     * Test upload exception.
+     * Test upload failure throws exception.
+     *
+     * Ensures FileException is propagated when file move fails.
+     *
+     * @return void
      */
     public function testUploadThrowsException(): void
     {

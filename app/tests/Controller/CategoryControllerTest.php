@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Category controller tests.
+ */
+
 namespace App\Tests\Controller;
 
 use App\Entity\Book;
@@ -16,14 +20,31 @@ use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\BookRepository;
 
+/**
+ * Class CategoryControllerTest.
+ */
 class CategoryControllerTest extends WebTestCase
 {
+    /**
+     * Base route for category controller.
+     */
     public const TEST_ROUTE = '/category';
 
+    /**
+     * HTTP client used to simulate browser requests.
+     */
     private KernelBrowser $httpClient;
 
+    /**
+     * Doctrine entity manager.
+     */
     private ?EntityManagerInterface $entityManager;
 
+    /**
+     * Set up test environment before each test.
+     *
+     * Initializes HTTP client and entity manager.
+     */
     public function setUp(): void
     {
         $this->httpClient = static::createClient();
@@ -33,7 +54,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Anonymous user should be redirected.
+     * Anonymous user should be redirected from category index.
      */
     public function testIndexAnonymous(): void
     {
@@ -46,7 +67,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Normal user should get 403.
+     * Normal user should be forbidden from category index.
      */
     public function testIndexUserForbidden(): void
     {
@@ -85,7 +106,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Test admin show category.
+     * Test admin can view category details.
      */
     public function testShowCategoryAdmin(): void
     {
@@ -110,7 +131,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Test user create category (FORBIDDEN).
+     * Test user cannot access category creation page.
      */
     public function testCreateCategoryForbiddenForUser(): void
     {
@@ -125,11 +146,14 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/create'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test admin create category.
+     * Test admin can create category.
      */
     public function testCreateCategoryAdmin(): void
     {
@@ -157,7 +181,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Test user edit category (FORBIDDEN).
+     * Test user cannot edit category.
      */
     public function testEditCategoryForbiddenForUser(): void
     {
@@ -174,11 +198,14 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$category->getId().'/edit'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test admin edit category.
+     * Test admin can edit category.
      */
     public function testEditCategoryAdmin(): void
     {
@@ -208,7 +235,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Test user delete category (FORBIDDEN).
+     * Test user cannot delete category.
      */
     public function testDeleteTagForbiddenForUser(): void
     {
@@ -225,11 +252,14 @@ class CategoryControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$category->getId().'/delete'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test admin delete category.
+     * Test admin can delete category.
      */
     public function testDeleteCategoryAdmin(): void
     {
@@ -257,7 +287,7 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * Test delete category with books.
+     * Test deleting category with existing books.
      */
     public function testDeleteCategoryWithBooks(): void
     {
@@ -289,6 +319,9 @@ class CategoryControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * Test CategoryService canBeDeleted exception handling.
+     */
     public function testCanBeDeletedException(): void
     {
         $categoryRepository = $this->createMock(CategoryRepository::class);

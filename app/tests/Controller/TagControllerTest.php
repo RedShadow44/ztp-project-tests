@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Tag controller tests.
+ */
+
 namespace App\Tests\Controller;
 
 use App\Entity\Enum\UserRole;
@@ -10,28 +14,49 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class TagControllerTest.
+ */
 class TagControllerTest extends WebTestCase
 {
+    /**
+     * Base route for tag controller.
+     */
     public const TEST_ROUTE = '/tag';
 
+    /**
+     * HTTP client used for functional testing.
+     */
     private KernelBrowser $httpClient;
 
+    /**
+     * Set up test environment before each test.
+     *
+     * Initializes Symfony test client.
+     */
     public function setUp(): void
     {
         $this->httpClient = static::createClient();
     }
 
-    /*
-     * INDEX
+    /**
+     * Test index access for anonymous user.
+     *
+     * Ensures anonymous users are redirected from tag index.
      */
-
     public function testIndexAnonymous(): void
     {
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
+    /**
+     * Test index access forbidden for normal user.
+     */
     public function testIndexUserForbidden(): void
     {
         $user = $this->createUser([
@@ -42,9 +67,15 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
+    /**
+     * Test index access for admin user.
+     */
     public function testIndexAdmin(): void
     {
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
@@ -53,15 +84,17 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
 
         $this->assertSelectorExists('html');
     }
 
-    /*
-     * SHOW
+    /**
+     * Test show tag page for admin.
      */
-
     public function testShowTagAdmin(): void
     {
         $admin = $this->createUser([
@@ -77,15 +110,17 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId()
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
 
         $this->assertSelectorExists('html');
     }
 
-    /*
-     * CREATE
+    /**
+     * Test create tag forbidden for normal user.
      */
-
     public function testCreateTagForbiddenForUser(): void
     {
         $user = $this->createUser([
@@ -99,9 +134,15 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/create'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
+    /**
+     * Test create tag as admin.
+     */
     public function testCreateTagAdmin(): void
     {
         $admin = $this->createUser([
@@ -121,13 +162,15 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
-    /*
-     * EDIT
+    /**
+     * Test edit tag forbidden for normal user.
      */
-
     public function testEditTagForbiddenForUser(): void
     {
         $user = $this->createUser([
@@ -143,9 +186,15 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId().'/edit'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
+    /**
+     * Test edit tag as admin.
+     */
     public function testEditTagAdmin(): void
     {
         $admin = $this->createUser([
@@ -167,13 +216,15 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
-    /*
-     * DELETE
+    /**
+     * Test delete tag forbidden for normal user.
      */
-
     public function testDeleteTagForbiddenForUser(): void
     {
         $user = $this->createUser([
@@ -189,9 +240,15 @@ class TagControllerTest extends WebTestCase
             self::TEST_ROUTE.'/'.$tag->getId().'/delete'
         );
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
+    /**
+     * Test delete tag as admin.
+     */
     public function testDeleteTagAdmin(): void
     {
         $admin = $this->createUser([
@@ -211,13 +268,15 @@ class TagControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
-    /*
-     * HELPERS
+    /**
+     * Create test user.
      */
-
     private function createUser(array $roles): User
     {
         $container = static::getContainer();
@@ -244,6 +303,9 @@ class TagControllerTest extends WebTestCase
         return $user;
     }
 
+    /**
+     * Create test tag.
+     */
     private function createTag(): Tag
     {
         $container = static::getContainer();

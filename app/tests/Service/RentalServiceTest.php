@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Service\RentalService;
 use App\Service\RentalServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -26,22 +27,32 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class RentalServiceTest extends KernelTestCase
 {
     /**
-     * Entity manager.
+     * Entity manager instance.
+     *
+     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
-     * Rental service.
+     * Rental service under test.
+     *
+     * @var RentalServiceInterface|null
      */
     private ?RentalServiceInterface $rentalService;
 
     /**
-     * Rental repository.
+     * Rental repository instance.
+     *
+     * @var RentalRepository|null
      */
     private ?RentalRepository $rentalRepository;
 
     /**
-     * Set up test.
+     * Set up test environment.
+     *
+     * Initializes services and Doctrine entity manager from container.
+     *
+     * @return void
      */
     protected function setUp(): void
     {
@@ -61,18 +72,19 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Test rent book.
+     * Test renting a book.
+     *
+     * Ensures rental is created correctly and book is marked unavailable.
+     *
+     * @return void
      */
     public function testRentBook(): void
     {
-        // given
         $user = $this->createUser();
         $book = $this->createBook();
 
-        // when
         $rental = $this->rentalService->rentBook($book, $user);
 
-        // then
         $this->assertInstanceOf(Rental::class, $rental);
         $this->assertEquals($user->getId(), $rental->getOwner()->getId());
         $this->assertEquals($book->getId(), $rental->getBook()->getId());
@@ -81,31 +93,34 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Test approve rental.
+     * Test approving a rental.
+     *
+     * Ensures rental status is set to approved and ownership is updated.
+     *
+     * @return void
      */
     public function testApproveRental(): void
     {
-        // given
         $user = $this->createUser();
         $book = $this->createBook();
 
         $rental = $this->rentalService->rentBook($book, $user);
 
-        // when
         $this->rentalService->approveRental($rental);
 
-        // then
         $this->assertTrue($rental->isStatus());
-
         $this->assertEquals($user->getId(), $rental->getBook()->getOwner()->getId());
     }
 
     /**
-     * Test get paginated by status.
+     * Test paginated rentals filtered by status.
+     *
+     * Ensures only pending rentals are returned.
+     *
+     * @return void
      */
     public function testGetPaginatedByStatus(): void
     {
-        // given
         $page = 1;
         $expectedResultSize = 2;
 
@@ -117,27 +132,21 @@ class RentalServiceTest extends KernelTestCase
 
             $rental = $this->rentalService->rentBook($book, $user);
 
-            // keep status = false
             $this->rentalService->save($rental);
 
             ++$counter;
         }
 
-        // approved rental (should NOT appear)
         $approvedRental = $this->rentalService->rentBook(
             $this->createBook(),
             $this->createUser()
         );
 
         $approvedRental->setStatus(true);
-
         $this->rentalService->save($approvedRental);
 
-        // when
-        $result = $this->rentalService
-            ->getPaginatedByStatus($page);
+        $result = $this->rentalService->getPaginatedByStatus($page);
 
-        // then
         $this->assertEquals($expectedResultSize, $result->count());
 
         foreach ($result as $rental) {
@@ -146,11 +155,14 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Test get paginated by owner.
+     * Test paginated rentals filtered by owner.
+     *
+     * Ensures only rentals belonging to a specific user are returned.
+     *
+     * @return void
      */
     public function testGetPaginatedByOwner(): void
     {
-        // given
         $page = 1;
         $expectedResultSize = 2;
 
@@ -169,29 +181,28 @@ class RentalServiceTest extends KernelTestCase
             ++$counter;
         }
 
-        // when
         $result = $this->rentalService
             ->getPaginatedByOwner($page, $user->getId());
 
-        // then
         $this->assertEquals($expectedResultSize, $result->count());
     }
 
     /**
-     * Test save.
+     * Test saving a rental entity.
+     *
+     * Ensures rental is persisted in database.
+     *
+     * @return void
      */
     public function testSave(): void
     {
-        // given
         $rental = new Rental();
         $rental->setOwner($this->createUser());
         $rental->setBook($this->createBook());
         $rental->setStatus(false);
 
-        // when
         $this->rentalService->save($rental);
 
-        // then
         $savedRental = $this->entityManager
             ->createQueryBuilder()
             ->select('rental')
@@ -205,11 +216,15 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Test delete.
+     * Test deleting a rental entity.
+     *
+     * Ensures rental is removed from persistence layer.
+     *
+     * @return void
+     * @throws NonUniqueResultException
      */
     public function testDelete(): void
     {
-        // given
         $user = $this->createUser();
         $book = $this->createBook();
 
@@ -217,10 +232,8 @@ class RentalServiceTest extends KernelTestCase
 
         $deletedRentalId = $rental->getId();
 
-        // when
         $this->rentalService->delete($rental);
 
-        // then
         $result = $this->entityManager
             ->createQueryBuilder()
             ->select('rental')
@@ -234,7 +247,9 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Create user helper.
+     * Create test user entity.
+     *
+     * @return User
      */
     private function createUser(): User
     {
@@ -256,12 +271,13 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Create category helper.
+     * Create test category entity.
+     *
+     * @return Category
      */
     private function createCategory(): Category
     {
-        $repo = static::getContainer()
-            ->get(CategoryRepository::class);
+        $repo = static::getContainer()->get(CategoryRepository::class);
 
         $category = new Category();
         $category->setTitle('Category '.uniqid());
@@ -272,12 +288,13 @@ class RentalServiceTest extends KernelTestCase
     }
 
     /**
-     * Create book helper.
+     * Create test book entity.
+     *
+     * @return Book
      */
     private function createBook(): Book
     {
-        $repo = static::getContainer()
-            ->get(BookRepository::class);
+        $repo = static::getContainer()->get(BookRepository::class);
 
         $book = new Book();
         $book->setTitle('Book '.uniqid());

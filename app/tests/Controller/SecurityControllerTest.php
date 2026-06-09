@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Security controller tests.
+ */
+
 namespace App\Tests\Controller;
 
 use App\Entity\Enum\UserRole;
@@ -13,15 +17,25 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SecurityControllerTest extends WebTestCase
 {
+    /**
+     * HTTP client used for functional testing.
+     */
     private KernelBrowser $httpClient;
 
+    /**
+     * Set up test environment before each test.
+     *
+     * Initializes Symfony test client.
+     */
     protected function setUp(): void
     {
         $this->httpClient = static::createClient();
     }
 
     /**
-     * Test login page loads.
+     * Test login page loads successfully.
+     *
+     * Ensures login form is rendered.
      */
     public function testLoginPageLoads(): void
     {
@@ -39,6 +53,8 @@ class SecurityControllerTest extends WebTestCase
 
     /**
      * Test login with invalid credentials.
+     *
+     * Ensures authentication fails and user is redirected or shown error.
      */
     public function testLoginInvalidCredentials(): void
     {
@@ -63,6 +79,8 @@ class SecurityControllerTest extends WebTestCase
 
     /**
      * Test login with valid credentials.
+     *
+     * Ensures authenticated user is redirected after successful login.
      */
     public function testLoginValidCredentials(): void
     {
@@ -79,10 +97,6 @@ class SecurityControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        // then [usually redirect after login]
-        //        $this->assertTrue(
-        //            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 200])
-        //        );
         // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
@@ -92,16 +106,14 @@ class SecurityControllerTest extends WebTestCase
 
     /**
      * Test logout route.
+     *
+     * Ensures logout endpoint triggers redirect behavior.
      */
     public function testLogout(): void
     {
         // when
         $this->httpClient->request('GET', '/logout');
 
-        // then [Symfony intercepts logout, typically 302 or handled by firewall]
-        //        $this->assertTrue(
-        //            in_array($this->httpClient->getResponse()->getStatusCode(), [302, 204, 500])
-        //        );
         // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
@@ -110,7 +122,7 @@ class SecurityControllerTest extends WebTestCase
     }
 
     /**
-     * Helper create user.
+     * Create test user for authentication tests.
      */
     private function createUser(): User
     {

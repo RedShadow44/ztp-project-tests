@@ -83,7 +83,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      *
      * @param string $role User role
      *
-     * @return $this
+     * @return array Query builder
      */
     public function findByRole(string $role): array
     {

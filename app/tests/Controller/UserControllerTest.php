@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * User controller tests.
+ */
+
 namespace App\Tests\Controller;
 
 use App\Entity\Enum\UserRole;
@@ -14,17 +18,19 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class UserControllerTest extends WebTestCase
 {
     /**
-     * Test route.
+     * Base route for user controller tests.
      */
     public const TEST_ROUTE = '/user';
 
     /**
-     * HTTP client.
+     * HTTP client used for functional tests.
      */
     private KernelBrowser $httpClient;
 
     /**
-     * Set up.
+     * Set up test environment before each test.
+     *
+     * Initializes Symfony test client.
      */
     public function setUp(): void
     {
@@ -32,7 +38,7 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test index admin.
+     * Test admin can access user index.
      */
     public function testIndexAdmin(): void
     {
@@ -55,21 +61,18 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test index forbidden for user.
+     * Test index access forbidden for normal user.
      */
     public function testIndexForbiddenForUser(): void
     {
-        // given
         $user = $this->createUser([
             UserRole::ROLE_USER->value,
         ]);
 
         $this->httpClient->loginUser($user);
 
-        // when
         $this->httpClient->request('GET', self::TEST_ROUTE);
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
@@ -77,23 +80,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test show user.
+     * Test admin can view user details.
      */
     public function testShowUser(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $this->httpClient->loginUser($admin);
 
         $targetUser = $this->createUser([UserRole::ROLE_USER->value]);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/user/'.$targetUser->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -103,23 +103,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test show user forbidden for non-admin user.
+     * Test user cannot view another user profile.
      */
     public function testShowUserForbiddenForUser(): void
     {
-        // given
         $user1 = $this->createUser([UserRole::ROLE_USER->value]);
         $user2 = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user1);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/user/'.$user2->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
@@ -127,23 +124,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test edit user (GET form).
+     * Test admin can access edit user form.
      */
     public function testEditUserGet(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $this->httpClient->loginUser($admin);
 
         $targetUser = $this->createUser([UserRole::ROLE_USER->value]);
 
-        // when
-        $crawler = $this->httpClient->request(
+        $this->httpClient->request(
             'GET',
             '/user/'.$targetUser->getId().'/edit'
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -153,11 +147,10 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test edit user submit.
+     * Test admin can submit user edit form.
      */
     public function testEditUserSubmit(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $this->httpClient->loginUser($admin);
 
@@ -172,10 +165,8 @@ class UserControllerTest extends WebTestCase
             'user[email]' => 'updated_'.uniqid().'@example.com',
         ]);
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
@@ -183,24 +174,21 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test show own profile.
+     * Test user can view own profile.
      */
     public function testProfileOwnUser(): void
     {
-        // given
         $user = $this->createUser([
             UserRole::ROLE_USER->value,
         ]);
 
         $this->httpClient->loginUser($user);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/profile/'.$user->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -209,11 +197,10 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test profile forbidden for different user.
+     * Test user cannot view another profile.
      */
     public function testProfileForbidden(): void
     {
-        // given
         $user1 = $this->createUser([
             UserRole::ROLE_USER->value,
         ]);
@@ -224,13 +211,11 @@ class UserControllerTest extends WebTestCase
 
         $this->httpClient->loginUser($user1);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/profile/'.$user2->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
@@ -238,17 +223,12 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test register.
+     * Test user registration flow.
      */
     public function testRegister(): void
     {
-        // when
-        $crawler = $this->httpClient->request(
-            'GET',
-            '/register'
-        );
+        $crawler = $this->httpClient->request('GET', '/register');
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -270,23 +250,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change profile forbidden for another user.
+     * Test changing another user's profile is forbidden.
      */
     public function testChangeProfileForbiddenForAnotherUser(): void
     {
-        // given
         $user1 = $this->createUser([UserRole::ROLE_USER->value]);
         $user2 = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user1);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/change/'.$user2->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
@@ -294,22 +271,19 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change profile for owner.
+     * Test user can access own profile change form.
      */
     public function testChangeProfileOwner(): void
     {
-        // given
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user);
 
-        // when
-        $crawler = $this->httpClient->request(
+        $this->httpClient->request(
             'GET',
             '/change/'.$user->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -319,11 +293,10 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change profile submit.
+     * Test profile change submission.
      */
     public function testChangeProfileSubmit(): void
     {
-        // given
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user);
@@ -333,14 +306,12 @@ class UserControllerTest extends WebTestCase
             '/change/'.$user->getId()
         );
 
-        // when
         $form = $crawler->filter('form')->form([
             'user[email]' => 'updated_'.uniqid().'@example.com',
         ]);
 
         $this->httpClient->submit($form);
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
@@ -348,23 +319,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change password forbidden for another user.
+     * Test changing another user's password is forbidden.
      */
     public function testChangePasswordForbiddenForAnotherUser(): void
     {
-        // given
         $user1 = $this->createUser([UserRole::ROLE_USER->value]);
         $user2 = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user1);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/change/pass/'.$user2->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN,
             $this->httpClient->getResponse()->getStatusCode()
@@ -372,22 +340,19 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change password for owner.
+     * Test owner can access password change form.
      */
     public function testChangePasswordOwner(): void
     {
-        // given
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user);
 
-        // when
-        $crawler = $this->httpClient->request(
+        $this->httpClient->request(
             'GET',
             '/change/pass/'.$user->getId()
         );
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             $this->httpClient->getResponse()->getStatusCode()
@@ -397,11 +362,10 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test change password submit.
+     * Test password change submission.
      */
     public function testChangePasswordSubmit(): void
     {
-        // given
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
         $this->httpClient->loginUser($user);
@@ -411,7 +375,6 @@ class UserControllerTest extends WebTestCase
             '/change/pass/'.$user->getId()
         );
 
-        // when
         $form = $crawler->filter('form')->form([
             'user[plain_password][first]' => 'newpassword123',
             'user[plain_password][second]' => 'newpassword123',
@@ -419,7 +382,6 @@ class UserControllerTest extends WebTestCase
 
         $this->httpClient->submit($form);
 
-        // then
         $this->assertEquals(
             \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
             $this->httpClient->getResponse()->getStatusCode()
@@ -427,11 +389,10 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Test set admin success.
+     * Test granting admin role to user.
      */
     public function testSetAdminSuccess(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
@@ -444,19 +405,19 @@ class UserControllerTest extends WebTestCase
 
         $form = $crawler->filter('form')->form();
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test revoke admin success.
+     * Test revoking admin role from user.
      */
     public function testRevokeAdminSuccess(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $user = $this->createUser([
             UserRole::ROLE_USER->value,
@@ -472,39 +433,39 @@ class UserControllerTest extends WebTestCase
 
         $form = $crawler->filter('form')->form();
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test revoke admin blocked when last admin.
+     * Test preventing last admin from being revoked.
      */
     public function testRevokeAdminLastAdmin(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
 
         $this->httpClient->loginUser($admin);
 
-        // when
         $this->httpClient->request(
             'GET',
             '/user/'.$admin->getId().'/revoke_admin'
         );
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test block user.
+     * Test blocking a user.
      */
     public function testBlockUser(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
@@ -517,19 +478,19 @@ class UserControllerTest extends WebTestCase
 
         $form = $crawler->filter('form')->form();
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test unblock user.
+     * Test unblocking a user.
      */
     public function testUnblockUser(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $user = $this->createUser([UserRole::ROLE_USER->value]);
         $user->setBlocked(true);
@@ -543,19 +504,19 @@ class UserControllerTest extends WebTestCase
 
         $form = $crawler->filter('form')->form();
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Test edit password.
+     * Test editing user password as admin.
      */
     public function testEditPassword(): void
     {
-        // given
         $admin = $this->createUser([UserRole::ROLE_ADMIN->value]);
         $user = $this->createUser([UserRole::ROLE_USER->value]);
 
@@ -571,15 +532,16 @@ class UserControllerTest extends WebTestCase
             'user[plain_password][second]' => 'newpass123',
         ]);
 
-        // when
         $this->httpClient->submit($form);
 
-        // then
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals(
+            \Symfony\Component\HttpFoundation\Response::HTTP_FOUND,
+            $this->httpClient->getResponse()->getStatusCode()
+        );
     }
 
     /**
-     * Create user helper.
+     * Create test user.
      */
     private function createUser(array $roles): User
     {
