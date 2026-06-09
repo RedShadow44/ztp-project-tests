@@ -183,6 +183,8 @@ class RentalController extends AbstractController
     #[Route('/{id}/return', name: 'return', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function return(Request $request, Rental $rental): Response
     {
+        $this->denyAccessUnlessGranted('rental_return', $rental);
+
         $form = $this->createForm(
             FormType::class,
             $rental,
