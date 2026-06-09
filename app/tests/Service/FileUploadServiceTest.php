@@ -19,8 +19,6 @@ class FileUploadServiceTest extends KernelTestCase
 {
     /**
      * File upload service instance.
-     *
-     * @var FileUploadService|null
      */
     private ?FileUploadService $fileUploadService;
 
@@ -28,8 +26,6 @@ class FileUploadServiceTest extends KernelTestCase
      * Set up test environment.
      *
      * Initializes FileUploadService with real slugger and temp directory.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -45,8 +41,6 @@ class FileUploadServiceTest extends KernelTestCase
      * Test successful file upload.
      *
      * Ensures file is moved to target directory and filename is returned.
-     *
-     * @return void
      */
     public function testUpload(): void
     {
@@ -79,8 +73,6 @@ class FileUploadServiceTest extends KernelTestCase
 
     /**
      * Test retrieving target upload directory.
-     *
-     * @return void
      */
     public function testGetTargetDirectory(): void
     {
@@ -99,8 +91,6 @@ class FileUploadServiceTest extends KernelTestCase
      * Test upload failure throws exception.
      *
      * Ensures FileException is propagated when file move fails.
-     *
-     * @return void
      */
     public function testUploadThrowsException(): void
     {

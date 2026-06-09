@@ -25,15 +25,11 @@ class UserServiceTest extends KernelTestCase
 {
     /**
      * Entity manager instance.
-     *
-     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
      * User service under test.
-     *
-     * @var UserServiceInterface|null
      */
     private ?UserServiceInterface $userService;
 
@@ -42,7 +38,6 @@ class UserServiceTest extends KernelTestCase
      *
      * Initializes entity manager and service from Symfony container.
      *
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -59,7 +54,6 @@ class UserServiceTest extends KernelTestCase
      *
      * Ensures user entity is persisted correctly.
      *
-     * @return void
      * @throws ORMException
      */
     public function testSave(): void
@@ -92,7 +86,6 @@ class UserServiceTest extends KernelTestCase
      *
      * Ensures user is removed from persistence layer.
      *
-     * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -128,8 +121,6 @@ class UserServiceTest extends KernelTestCase
      * Test retrieving paginated user list.
      *
      * Ensures pagination returns at least created users.
-     *
-     * @return void
      */
     public function testGetPaginatedList(): void
     {
@@ -164,8 +155,6 @@ class UserServiceTest extends KernelTestCase
      * Test detecting last admin.
      *
      * Ensures service correctly identifies single remaining admin.
-     *
-     * @return void
      */
     public function testIsLastAdmin(): void
     {
@@ -188,8 +177,6 @@ class UserServiceTest extends KernelTestCase
      * Test detecting when user is not last admin.
      *
      * Ensures service returns false when multiple admins exist.
-     *
-     * @return void
      */
     public function testIsNotLastAdmin(): void
     {

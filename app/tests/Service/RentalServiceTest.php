@@ -28,22 +28,16 @@ class RentalServiceTest extends KernelTestCase
 {
     /**
      * Entity manager instance.
-     *
-     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
      * Rental service under test.
-     *
-     * @var RentalServiceInterface|null
      */
     private ?RentalServiceInterface $rentalService;
 
     /**
      * Rental repository instance.
-     *
-     * @var RentalRepository|null
      */
     private ?RentalRepository $rentalRepository;
 
@@ -51,8 +45,6 @@ class RentalServiceTest extends KernelTestCase
      * Set up test environment.
      *
      * Initializes services and Doctrine entity manager from container.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -75,8 +67,6 @@ class RentalServiceTest extends KernelTestCase
      * Test renting a book.
      *
      * Ensures rental is created correctly and book is marked unavailable.
-     *
-     * @return void
      */
     public function testRentBook(): void
     {
@@ -96,8 +86,6 @@ class RentalServiceTest extends KernelTestCase
      * Test approving a rental.
      *
      * Ensures rental status is set to approved and ownership is updated.
-     *
-     * @return void
      */
     public function testApproveRental(): void
     {
@@ -116,8 +104,6 @@ class RentalServiceTest extends KernelTestCase
      * Test paginated rentals filtered by status.
      *
      * Ensures only pending rentals are returned.
-     *
-     * @return void
      */
     public function testGetPaginatedByStatus(): void
     {
@@ -158,8 +144,6 @@ class RentalServiceTest extends KernelTestCase
      * Test paginated rentals filtered by owner.
      *
      * Ensures only rentals belonging to a specific user are returned.
-     *
-     * @return void
      */
     public function testGetPaginatedByOwner(): void
     {
@@ -191,8 +175,6 @@ class RentalServiceTest extends KernelTestCase
      * Test saving a rental entity.
      *
      * Ensures rental is persisted in database.
-     *
-     * @return void
      */
     public function testSave(): void
     {
@@ -220,7 +202,6 @@ class RentalServiceTest extends KernelTestCase
      *
      * Ensures rental is removed from persistence layer.
      *
-     * @return void
      * @throws NonUniqueResultException
      */
     public function testDelete(): void
@@ -248,8 +229,6 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test user entity.
-     *
-     * @return User
      */
     private function createUser(): User
     {
@@ -272,8 +251,6 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test category entity.
-     *
-     * @return Category
      */
     private function createCategory(): Category
     {
@@ -289,8 +266,6 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test book entity.
-     *
-     * @return Book
      */
     private function createBook(): Book
     {

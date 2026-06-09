@@ -26,15 +26,11 @@ class BookServiceTest extends KernelTestCase
 {
     /**
      * Entity manager instance.
-     *
-     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
      * Book service under test.
-     *
-     * @var BookServiceInterface|null
      */
     private ?BookServiceInterface $bookService;
 
@@ -58,7 +54,6 @@ class BookServiceTest extends KernelTestCase
      * Ensures the book is persisted and retrievable from database.
      *
      * @throws ORMException
-     * @return void
      */
     public function testSave(): void
     {
@@ -100,7 +95,6 @@ class BookServiceTest extends KernelTestCase
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @return void
      */
     public function testDelete(): void
     {
@@ -141,8 +135,6 @@ class BookServiceTest extends KernelTestCase
      * Test setting book availability.
      *
      * Ensures availability flag is properly updated.
-     *
-     * @return void
      */
     public function testSetAvailable(): void
     {
@@ -161,8 +153,6 @@ class BookServiceTest extends KernelTestCase
      * Test paginated books for category.
      *
      * Ensures pagination returns correct number of results per category.
-     *
-     * @return void
      */
     public function testGetPaginatedBooksForCategory(): void
     {
@@ -202,8 +192,6 @@ class BookServiceTest extends KernelTestCase
      * Test paginated book list with filters.
      *
      * Ensures filtering logic is applied correctly.
-     *
-     * @return void
      */
     public function testGetPaginatedList(): void
     {

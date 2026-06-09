@@ -22,15 +22,11 @@ class TagServiceTest extends KernelTestCase
 {
     /**
      * Entity manager instance.
-     *
-     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
      * Tag service under test.
-     *
-     * @var TagServiceInterface|null
      */
     private ?TagServiceInterface $tagService;
 
@@ -38,8 +34,6 @@ class TagServiceTest extends KernelTestCase
      * Set up test environment.
      *
      * Initializes entity manager and service from container.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -55,7 +49,6 @@ class TagServiceTest extends KernelTestCase
      *
      * Ensures tag is persisted in the database.
      *
-     * @return void
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -83,7 +76,6 @@ class TagServiceTest extends KernelTestCase
      *
      * Ensures tag is removed from persistence layer.
      *
-     * @return void
      * @throws NonUniqueResultException
      */
     public function testDelete(): void
@@ -114,8 +106,6 @@ class TagServiceTest extends KernelTestCase
      * Test finding tag by title.
      *
      * Ensures service correctly retrieves tag by its title.
-     *
-     * @return void
      */
     public function testFindOneByTitle(): void
     {
@@ -134,8 +124,6 @@ class TagServiceTest extends KernelTestCase
      * Test finding tag by id.
      *
      * Ensures service correctly retrieves tag by its identifier.
-     *
-     * @return void
      */
     public function testFindOneById(): void
     {
@@ -154,8 +142,6 @@ class TagServiceTest extends KernelTestCase
      * Test paginated tag list retrieval.
      *
      * Ensures pagination returns expected number of tags.
-     *
-     * @return void
      */
     public function testGetPaginatedList(): void
     {

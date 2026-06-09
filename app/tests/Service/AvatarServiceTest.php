@@ -23,22 +23,16 @@ class AvatarServiceTest extends KernelTestCase
 {
     /**
      * Entity manager instance.
-     *
-     * @var EntityManagerInterface|null
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
      * Avatar repository.
-     *
-     * @var AvatarRepository|null
      */
     private ?AvatarRepository $avatarRepository;
 
     /**
      * Avatar service under test.
-     *
-     * @var AvatarService|null
      */
     private ?AvatarService $avatarService;
 
@@ -46,8 +40,6 @@ class AvatarServiceTest extends KernelTestCase
      * Set up test environment.
      *
      * Initializes entity manager, repository and a mocked file upload service.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -81,8 +73,6 @@ class AvatarServiceTest extends KernelTestCase
      * Test avatar creation process.
      *
      * Ensures uploaded file is stored and avatar entity is persisted.
-     *
-     * @return void
      */
     public function testCreate(): void
     {
@@ -136,8 +126,6 @@ class AvatarServiceTest extends KernelTestCase
      * Test avatar update process.
      *
      * Ensures old avatar is replaced with a new uploaded file.
-     *
-     * @return void
      */
     public function testUpdate(): void
     {
