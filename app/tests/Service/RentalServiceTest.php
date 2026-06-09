@@ -229,6 +229,8 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test user entity.
+     *
+     * @return User
      */
     private function createUser(): User
     {
@@ -251,6 +253,8 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test category entity.
+     *
+     * @return Category
      */
     private function createCategory(): Category
     {
@@ -266,6 +270,8 @@ class RentalServiceTest extends KernelTestCase
 
     /**
      * Create test book entity.
+     *
+     * @return Book
      */
     private function createBook(): Book
     {

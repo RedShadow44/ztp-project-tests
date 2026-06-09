@@ -542,6 +542,10 @@ class UserControllerTest extends WebTestCase
 
     /**
      * Create test user.
+     *
+     * @param array $roles
+     *
+     * @return User
      */
     private function createUser(array $roles): User
     {

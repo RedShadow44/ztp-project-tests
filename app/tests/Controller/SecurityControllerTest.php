@@ -123,6 +123,8 @@ class SecurityControllerTest extends WebTestCase
 
     /**
      * Create test user for authentication tests.
+     *
+     * @return User
      */
     private function createUser(): User
     {

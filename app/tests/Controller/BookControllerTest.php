@@ -33,8 +33,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Set up test environment before each test.
-     *
-     * Initializes the Symfony test client.
      */
     public function setUp(): void
     {
@@ -43,9 +41,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test index route for anonymous user.
-     *
-     * Ensures that the book index page is accessible
-     * without authentication.
      */
     public function testIndexRouteAnonymous(): void
     {
@@ -59,9 +54,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test index route for authenticated user.
-     *
-     * Ensures that logged-in user can access book index
-     * and HTML is rendered.
      */
     public function testIndexRouteUser(): void
     {
@@ -79,9 +71,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test show book route for anonymous user.
-     *
-     * Ensures that anonymous users are redirected
-     * when trying to access a book detail page.
      */
     public function testShowBookAnonymous(): void
     {
@@ -97,9 +86,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test show book route for allowed user.
-     *
-     * Ensures that a non-blocked user can access
-     * book details page.
      */
     public function testShowBookAllowedUser(): void
     {
@@ -121,9 +107,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test show book route for blocked user.
-     *
-     * Ensures that blocked users are denied access
-     * to book details page.
      */
     public function testShowBookBlockedUser(): void
     {
@@ -144,9 +127,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test create book access forbidden for normal user.
-     *
-     * Ensures that non-admin users cannot access
-     * book creation page.
      */
     public function testCreateBookForbiddenForUser(): void
     {
@@ -163,9 +143,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test create book page for admin.
-     *
-     * Ensures that admin users can access
-     * book creation form.
      */
     public function testCreateBookAdmin(): void
     {
@@ -183,9 +160,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test book creation submission.
-     *
-     * Ensures that admin can successfully submit
-     * a new book creation form.
      */
     public function testCreateBookSubmit(): void
     {
@@ -219,9 +193,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test edit book forbidden for normal user.
-     *
-     * Ensures non-admin users cannot access
-     * book edit page.
      */
     public function testEditBookForbiddenForUser(): void
     {
@@ -240,9 +211,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test edit book page and submission for admin.
-     *
-     * Ensures admin can access edit form and successfully
-     * update a book entity.
      */
     public function testEditBookAdmin(): void
     {
@@ -277,8 +245,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test delete book forbidden for normal user.
-     *
-     * Ensures non-admin users cannot delete books.
      */
     public function testDeleteBookForbiddenForUser(): void
     {
@@ -297,8 +263,6 @@ class BookControllerTest extends WebTestCase
 
     /**
      * Test delete book as admin.
-     *
-     * Ensures admin can delete a book successfully.
      */
     public function testDeleteBookAdmin(): void
     {
@@ -320,9 +284,9 @@ class BookControllerTest extends WebTestCase
     /**
      * Create user helper.
      *
-     * Creates and persists a user with given roles and hashed password.
-     *
      * @param array $roles User roles
+     *
+     * @return User
      */
     private function createUser(array $roles): User
     {
@@ -344,7 +308,7 @@ class BookControllerTest extends WebTestCase
     /**
      * Create category helper.
      *
-     * Creates and persists a category entity for testing.
+     * @return Category
      */
     private function createCategory(): Category
     {
@@ -362,7 +326,7 @@ class BookControllerTest extends WebTestCase
     /**
      * Create book helper.
      *
-     * Creates and persists a book entity with a category.
+     * @return Book
      */
     private function createBook(): Book
     {

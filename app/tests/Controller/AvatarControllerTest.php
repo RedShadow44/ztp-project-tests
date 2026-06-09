@@ -228,8 +228,7 @@ class AvatarControllerTest extends WebTestCase
     /**
      * Create a test user entity.
      *
-     * Helper method that creates, persists, and returns
-     * a user with a hashed password and default role.
+     * @return User
      */
     private function createUser(): User
     {

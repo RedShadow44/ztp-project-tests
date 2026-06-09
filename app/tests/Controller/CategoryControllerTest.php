@@ -351,6 +351,8 @@ class CategoryControllerTest extends WebTestCase
 
     /**
      * Create category helper.
+     *
+     * @return Category
      */
     private function createCategory(): Category
     {
@@ -367,6 +369,10 @@ class CategoryControllerTest extends WebTestCase
 
     /**
      * Create user helper.
+     *
+     * @param array $roles
+     *
+     * @return User
      */
     private function createUser(array $roles): User
     {

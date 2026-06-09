@@ -1,5 +1,15 @@
 
-Found 0 of 55 files that can be fixed in 1.921 seconds, 18.00 MB memory used
+Found 0 of 57 files that can be fixed in 0.412 seconds, 72.00 MB memory used
+   1) tests/Controller/BookControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   2) tests/Controller/TagControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   3) tests/Controller/RentalControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   4) tests/Controller/SecurityControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   5) tests/Service/RentalServiceTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   6) tests/Controller/UserControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   7) tests/Controller/CategoryControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+   8) tests/Controller/AvatarControllerTest.php (no_superfluous_phpdoc_tags, phpdoc_trim)
+
+Found 8 of 21 files that can be fixed in 0.396 seconds, 72.00 MB memory used
  ------- -------- ---- ---------------------- 
   State   Domain   Id   Message Preview (en)  
  ------- -------- ---- ---------------------- 
@@ -9,9 +19,9 @@ Found 0 of 55 files that can be fixed in 1.921 seconds, 18.00 MB memory used
  ------- -------- ---- ---------------------- ------------------------------- 
 
 [notice] Migrating up to DoctrineMigrations\Version20240621141021
-[notice] finished in 6284.5ms, used 24M memory, 16 migrations executed, 28 sql queries
+[notice] finished in 597.1ms, used 26M memory, 16 migrations executed, 28 sql queries
 
- [OK] Successfully migrated to version: DoctrineMigrations\Version20240621141021                                       
+ [OK] Successfully migrated to version: DoctrineMigrations\Version20240621141021                                        
 
 
    > purging database
