@@ -9,6 +9,8 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -105,6 +107,32 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         assert($this->_em instanceof EntityManager);
         $this->_em->remove($user);
         $this->_em->flush();
+    }
+
+    /**
+     * Checks whether a user with the given email already exists in the database.
+     *
+     * @param string   $email     Email address to check
+     * @param int|null $excludeId User ID to exclude from search (used in edit mode)
+     *
+     * @return bool True if email already exists, false otherwise
+     *
+     * @throws NonUniqueResultException If the query returns more than one result (should not happen with COUNT)
+     * @throws NoResultException        If no result is returned from the query
+     */
+    public function emailExists(string $email, ?int $excludeId = null): bool
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.email = :email')
+            ->setParameter('email', $email);
+
+        if (null !== $excludeId) {
+            $qb->andWhere('u.id != :id')
+                ->setParameter('id', $excludeId);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
     }
 
     /**

@@ -12,6 +12,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class NoteService.
@@ -62,6 +63,19 @@ class UserService implements UserServiceInterface
      */
     public function save(User $user): void
     {
+        $excludeId = $user->getId();
+
+        if ($this->userRepository->emailExists($user->getEmail(), $excludeId)) {
+            throw new \RuntimeException('EMAIL_EXISTS');
+        }
+
+        //        $excludeId = $user->getId();
+        //
+        //        if ($this->userRepository->emailExists($user->getEmail(), $excludeId)) {
+        //            // do NOT persist → just stop flow safely
+        //            throw new AccessDeniedException('Email already exists');
+        //        }
+
         $this->userRepository->save($user);
     }
 

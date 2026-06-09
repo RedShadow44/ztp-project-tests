@@ -57,18 +57,41 @@ class UserController extends AbstractController
         $form = $this->createForm(RegisterType::class, $user);
         $form->handleRequest($request);
 
+        //        if ($form->isSubmitted() && $form->isValid()) {
+        //            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+        //
+        //            $user->setRoles([UserRole::ROLE_USER->value]);
+        //            $this->userService->save($user);
+        //
+        //            $this->addFlash(
+        //                'success',
+        //                $this->translator->trans('message.created_successfully')
+        //            );
+        //
+        //            return $this->redirectToRoute('app_login');
+        //        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+            try {
+                $user->setPassword(
+                    $this->passwordHasher->hashPassword(
+                        $user,
+                        $user->getPassword()
+                    )
+                );
 
-            $user->setRoles([UserRole::ROLE_USER->value]);
-            $this->userService->save($user);
+                $user->setRoles([UserRole::ROLE_USER->value]);
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.created_successfully')
-            );
+                $this->userService->save($user);
 
-            return $this->redirectToRoute('app_login');
+                $this->addFlash('success', $this->translator->trans('message.created_successfully'));
+
+                return $this->redirectToRoute('app_login');
+            } catch (\RuntimeException $e) {
+                if ('EMAIL_EXISTS' === $e->getMessage()) {
+                    $this->addFlash('danger', $this->translator->trans('message.email_already_exists'));
+                }
+            }
         }
 
         return $this->render(
@@ -141,22 +164,35 @@ class UserController extends AbstractController
         );
         $form->handleRequest($request);
 
+        //        if ($form->isSubmitted() && $form->isValid()) {
+        //            $this->userService->save($user);
+        //
+        //            $this->addFlash(
+        //                'success',
+        //                $this->translator->trans('message.changed_successfully')
+        //            );
+        //
+        //            $id = $request->attributes->get('id');
+        //
+        //            return $this->redirectToRoute(
+        //                'user_index',
+        //                [
+        //                    'id' => $id,
+        //                ]
+        //            );
+        //        }
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userService->save($user);
+            try {
+                $this->userService->save($user);
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.changed_successfully')
-            );
+                $this->addFlash('success', $this->translator->trans('message.changed_successfully'));
 
-            $id = $request->attributes->get('id');
-
-            return $this->redirectToRoute(
-                'user_index',
-                [
-                    'id' => $id,
-                ]
-            );
+                return $this->redirectToRoute('user_index');
+            } catch (\RuntimeException $e) {
+                if ('EMAIL_EXISTS' === $e->getMessage()) {
+                    $this->addFlash('danger', $this->translator->trans('message.email_already_exists'));
+                }
+            }
         }
 
         return $this->render(
@@ -271,6 +307,7 @@ class UserController extends AbstractController
     public function change(Request $request, User $user): Response
     {
         $this->denyAccessUnlessGranted('view_profile', $user);
+        $originalEmail = $user->getEmail();
         $form = $this->createForm(
             UserType::class,
             $user,
@@ -281,27 +318,51 @@ class UserController extends AbstractController
         );
         $form->handleRequest($request);
 
+        //        if ($form->isSubmitted() && $form->isValid()) {
+        //            // $user->setRoles([UserRole::ROLE_USER->value]);
+        //            $this->userService->save($user);
+        //
+        //            $this->addFlash(
+        //                'success',
+        //                $this->translator->trans('message.changed_successfully')
+        //            );
+        //
+        //            $id = $request->attributes->get('id');
+        //
+        //            return $this->redirectToRoute(
+        //                'user_profile',
+        //                [
+        //                    'id' => $id,
+        //                ]
+        //            );
+        //        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // $user->setRoles([UserRole::ROLE_USER->value]);
-            $this->userService->save($user);
+            try {
+                $this->userService->save($user);
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.changed_successfully')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.changed_successfully')
+                );
 
-            $id = $request->attributes->get('id');
-
-            return $this->redirectToRoute(
-                'user_profile',
-                [
-                    'id' => $id,
-                ]
-            );
+                return $this->redirectToRoute(
+                    'user_profile',
+                    ['id' => $user->getId()]
+                );
+            } catch (\RuntimeException $e) {
+                if ('EMAIL_EXISTS' === $e->getMessage()) {
+                    $user->setEmail($originalEmail);
+                    $this->addFlash(
+                        'danger',
+                        $this->translator->trans('message.email_already_exists')
+                    );
+                }
+            }
         }
 
         return $this->render(
-            'security/edit.html.twig',
+            'security/change.html.twig',
             [
                 'form' => $form->createView(),
                 'user' => $user,
@@ -359,7 +420,7 @@ class UserController extends AbstractController
         }
 
         return $this->render(
-            'security/edit.html.twig',
+            'security/change.html.twig',
             [
                 'form' => $form->createView(),
                 'user' => $user,

@@ -555,6 +555,16 @@
         <target>Powtórz hasło</target>
      </trans-unit>
 
+     <trans-unit id="message.email_already_exists">
+         <source>message.email_already_exists</source>
+         <target>Email już istnieje</target>
+     </trans-unit>
+
+     <trans-unit id="title.user_change">
+         <source>title.user_change</source>
+         <target>Zmień</target>
+     </trans-unit>
+
 <!--      <trans-unit id=""> -->
 <!--         <source></source> -->
 <!--         <target></target> -->
