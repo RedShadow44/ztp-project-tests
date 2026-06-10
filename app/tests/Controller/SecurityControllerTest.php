@@ -124,7 +124,7 @@ class SecurityControllerTest extends WebTestCase
     /**
      * Create test user for authentication tests.
      *
-     * @return User
+     * @return User User entity
      */
     private function createUser(): User
     {

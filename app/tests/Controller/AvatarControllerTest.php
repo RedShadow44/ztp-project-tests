@@ -228,7 +228,7 @@ class AvatarControllerTest extends WebTestCase
     /**
      * Create a test user entity.
      *
-     * @return User
+     * @return User User entity
      */
     private function createUser(): User
     {

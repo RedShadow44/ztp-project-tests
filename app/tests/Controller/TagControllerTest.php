@@ -277,9 +277,9 @@ class TagControllerTest extends WebTestCase
     /**
      * Create test user.
      *
-     * @param array $roles
+     * @param array $roles User roles
      *
-     * @return User
+     * @return User User entity
      */
     private function createUser(array $roles): User
     {
@@ -310,7 +310,7 @@ class TagControllerTest extends WebTestCase
     /**
      * Create test tag.
      *
-     * @return Tag
+     * @return Tag Tag entity
      */
     private function createTag(): Tag
     {

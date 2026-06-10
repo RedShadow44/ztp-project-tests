@@ -245,9 +245,9 @@ class RentalControllerTest extends WebTestCase
     /**
      * Create test user.
      *
-     * @param array $roles
+     * @param array $roles User roles
      *
-     * @return User
+     * @return User User entity
      */
     private function createUser(array $roles): User
     {
@@ -271,7 +271,7 @@ class RentalControllerTest extends WebTestCase
     /**
      * Create test category.
      *
-     * @return Category
+     * @return Category Category entity
      */
     private function createCategory(): Category
     {
@@ -288,7 +288,7 @@ class RentalControllerTest extends WebTestCase
     /**
      * Create test book.
      *
-     * @return Book
+     * @return Book Book entity
      */
     private function createBook(): Book
     {
@@ -309,7 +309,7 @@ class RentalControllerTest extends WebTestCase
     /**
      * Create test rental.
      *
-     * @return Rental
+     * @return Rental Rental entity
      */
     private function createRental(): Rental
     {

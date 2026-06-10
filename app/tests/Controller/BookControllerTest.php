@@ -286,7 +286,7 @@ class BookControllerTest extends WebTestCase
      *
      * @param array $roles User roles
      *
-     * @return User
+     * @return User User entity
      */
     private function createUser(array $roles): User
     {
@@ -308,7 +308,7 @@ class BookControllerTest extends WebTestCase
     /**
      * Create category helper.
      *
-     * @return Category
+     * @return Category Category entity
      */
     private function createCategory(): Category
     {
@@ -326,7 +326,7 @@ class BookControllerTest extends WebTestCase
     /**
      * Create book helper.
      *
-     * @return Book
+     * @return Book Book entity
      */
     private function createBook(): Book
     {
