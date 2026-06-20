@@ -48,7 +48,7 @@ class RentalControllerTest extends WebTestCase
         $book = $this->createBook();
 
         $this->httpClient->request(
-            'GET',
+            'PUT',
             '/'.$book->getId().'/rent'
         );
 
@@ -72,7 +72,7 @@ class RentalControllerTest extends WebTestCase
         $book = $this->createBook();
 
         $this->httpClient->request(
-            'GET',
+            'PUT',
             '/'.$book->getId().'/rent'
         );
 
