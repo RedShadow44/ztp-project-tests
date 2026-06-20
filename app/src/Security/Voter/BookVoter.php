@@ -93,6 +93,10 @@ class BookVoter extends Voter
     private function canRent(Book $book, UserInterface $user): bool
     {
         // Check if the user is blocked
-        return !$user->isBlocked();
+        if ($user->isBlocked()) {
+            return false;
+        }
+
+        return $book->isAvailable();
     }
 }

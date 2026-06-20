@@ -47,7 +47,7 @@ class RentalController extends AbstractController
      * @return Response HTTP response
      */
     #[IsGranted('RENT', subject: 'book')]
-    #[Route('/{id}/rent', name: 'rent', requirements: ['id' => '[1-9]\d*'], methods: 'GET|POST')]
+    #[Route('/{id}/rent', name: 'rent', requirements: ['id' => '[1-9]\d*'], methods: 'PUT')]
     #[IsGranted('ROLE_USER')]
     public function rent(Request $request, Book $book): Response
     {

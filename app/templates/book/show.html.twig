@@ -53,11 +53,21 @@
 {#               title="{{ 'action.rent'|trans }}" >#}
 {#                {{ 'action.rent'|trans }}#}
 {#            </a>#}
+{#            {% if not is_granted('ROLE_ADMIN') %}#}
+{#                <a class="btn btn-primary" href="{{ url('rent', {id: book.id}) }}"#}
+{#                   title="{{ 'action.rent'|trans }}" >#}
+{#                    {{ 'action.rent'|trans }}#}
+{#                </a>#}
+{#            {% endif %}#}
+
             {% if not is_granted('ROLE_ADMIN') %}
-                <a class="btn btn-primary" href="{{ url('rent', {id: book.id}) }}"
-                   title="{{ 'action.rent'|trans }}" >
-                    {{ 'action.rent'|trans }}
-                </a>
+                <form method="post" action="{{ path('rent', {id: book.id}) }}" style="display:inline">
+                    <input type="hidden" name="_method" value="PUT">
+                    <button class="btn btn-primary" type="submit"
+                            title="{{ 'action.rent'|trans }}">
+                        {{ 'action.rent'|trans }}
+                    </button>
+                </form>
             {% endif %}
 
         </p>
